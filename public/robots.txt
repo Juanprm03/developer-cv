@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://juanprm03.github.io/developer-cv/sitemap-index.xml
