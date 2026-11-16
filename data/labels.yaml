@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../schema/labels.schema.json
+# Etiquetas de interfaz del CV (web y PDF), por idioma. No contienen datos profesionales.
+
+es:
+  summary: Perfil profesional
+  competencies: Competencias clave
+  work: Experiencia laboral
+  projects: Proyectos
+  skills: Habilidades técnicas
+  education: Formación académica
+  certificates: Certificaciones
+  languages: Idiomas
+  technologies: Tecnologías
+  present: Actualidad
+  downloadPdf: Descargar PDF
+  switchLang: English
+  contact: Contacto
+  degreeIn: en
+  knowledge: Conocimientos complementarios
+  knowledgePersonal: Proyectos personales
+  knowledgeLearning: En formación
+  knowledgeNote: No constituyen experiencia profesional ni certificaciones.
+  courses: Cursos
+  coursesKnowledge: Cursos y conocimientos complementarios
+  references: Referencias
+  referencesNote: Referencias profesionales disponibles a solicitud.
+  personalProject: Proyecto personal
+  inDevelopment: En desarrollo
+  devStopped: Desarrollo detenido
+  months: [ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
+
+en:
+  summary: Summary
+  competencies: Core competencies
+  work: Experience
+  projects: Projects
+  skills: Technical skills
+  education: Education
+  certificates: Certifications
+  languages: Languages
+  technologies: Tech stack
+  present: Present
+  downloadPdf: Download PDF
+  switchLang: Español
+  contact: Contact
+  degreeIn: in
+  knowledge: Complementary knowledge
+  knowledgePersonal: Personal projects
+  knowledgeLearning: Learning
+  knowledgeNote: Not professional experience or certifications.
+  courses: Courses
+  coursesKnowledge: Courses & complementary knowledge
+  references: References
+  referencesNote: Professional references available upon request.
+  personalProject: Personal project
+  inDevelopment: In development
+  devStopped: Development halted
+  months: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]

@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../schema/variant.schema.json
+id: ai-developer
+name: { es: AI Developer, en: AI Developer }
+order: 4
+title:
+  es: Juan Pablo Ruiz Marín — AI Developer
+  en: Juan Pablo Ruiz Marín — AI Developer
+description:
+  es: CV de Juan Pablo Ruiz Marín, desarrollador enfocado en IA aplicada con OpenAI API, LangChain, pgvector, MCP, Python y Node.js.
+  en: Resume of Juan Pablo Ruiz Marín, developer focused on applied AI with the OpenAI API, LangChain, pgvector, MCP, Python and Node.js.
+label:
+  es: AI Developer · Python · Node.js · Integraciones con LLM
+  en: AI Developer · Python · Node.js · LLM Integrations
+summary:
+  es: >-
+    Desarrollador de software enfocado en IA aplicada. Trabajé en la integración de **OpenAI API** con
+    agentes de **LangChain** para conversaciones y automatización en WhatsApp, participé en el backend de
+    agentes de IA y búsqueda semántica con **pgvector**, y en una integración en desarrollo de Claude
+    mediante **MCP**. Base en Python/FastAPI, Node.js, APIs REST y AWS.
+  en: >-
+    Software developer focused on applied AI. I contributed to **OpenAI API** integration with
+    **LangChain** agents for WhatsApp conversations and automation, took part in a backend for AI agents
+    and semantic search with **pgvector**, and worked on an in-progress Claude integration through
+    **MCP**. Grounded in Python/FastAPI, Node.js, REST APIs and AWS.
+tags: [ai, python, node, automation]
+highlights:
+  pin: [c-pocket-conversational-ai, c-pocket-ai-backend, c-pocket-mcp]
+  maxPerJob: 6
+competencies: [applied-ai, mcp, python-backend, node-backend, whatsapp, apis-integrations, aws]
+skills:
+  featured: [openai-api, langchain, pgvector, mcp, python, fastapi, nodejs]
+  categories: [ai, backend, data, cloud, quality, tools, frontend]
+projects: [conversational-platform, ai-backend, operations-platform, modular-erp]
+maxPages: 2

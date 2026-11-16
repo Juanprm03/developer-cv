@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "es": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "competencies": {
+          "type": "string"
+        },
+        "work": {
+          "type": "string"
+        },
+        "projects": {
+          "type": "string"
+        },
+        "skills": {
+          "type": "string"
+        },
+        "education": {
+          "type": "string"
+        },
+        "certificates": {
+          "type": "string"
+        },
+        "languages": {
+          "type": "string"
+        },
+        "technologies": {
+          "type": "string"
+        },
+        "present": {
+          "type": "string"
+        },
+        "downloadPdf": {
+          "type": "string"
+        },
+        "switchLang": {
+          "type": "string"
+        },
+        "contact": {
+          "type": "string"
+        },
+        "degreeIn": {
+          "type": "string"
+        },
+        "knowledge": {
+          "type": "string"
+        },
+        "knowledgePersonal": {
+          "type": "string"
+        },
+        "knowledgeLearning": {
+          "type": "string"
+        },
+        "knowledgeNote": {
+          "type": "string"
+        },
+        "courses": {
+          "type": "string"
+        },
+        "coursesKnowledge": {
+          "type": "string"
+        },
+        "references": {
+          "type": "string"
+        },
+        "referencesNote": {
+          "type": "string"
+        },
+        "personalProject": {
+          "type": "string"
+        },
+        "inDevelopment": {
+          "type": "string"
+        },
+        "devStopped": {
+          "type": "string"
+        },
+        "months": {
+          "minItems": 12,
+          "maxItems": 12,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "summary",
+        "competencies",
+        "work",
+        "projects",
+        "skills",
+        "education",
+        "certificates",
+        "languages",
+        "technologies",
+        "present",
+        "downloadPdf",
+        "switchLang",
+        "contact",
+        "degreeIn",
+        "knowledge",
+        "knowledgePersonal",
+        "knowledgeLearning",
+        "knowledgeNote",
+        "courses",
+        "coursesKnowledge",
+        "references",
+        "referencesNote",
+        "personalProject",
+        "inDevelopment",
+        "devStopped",
+        "months"
+      ],
+      "additionalProperties": false
+    },
+    "en": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "competencies": {
+          "type": "string"
+        },
+        "work": {
+          "type": "string"
+        },
+        "projects": {
+          "type": "string"
+        },
+        "skills": {
+          "type": "string"
+        },
+        "education": {
+          "type": "string"
+        },
+        "certificates": {
+          "type": "string"
+        },
+        "languages": {
+          "type": "string"
+        },
+        "technologies": {
+          "type": "string"
+        },
+        "present": {
+          "type": "string"
+        },
+        "downloadPdf": {
+          "type": "string"
+        },
+        "switchLang": {
+          "type": "string"
+        },
+        "contact": {
+          "type": "string"
+        },
+        "degreeIn": {
+          "type": "string"
+        },
+        "knowledge": {
+          "type": "string"
+        },
+        "knowledgePersonal": {
+          "type": "string"
+        },
+        "knowledgeLearning": {
+          "type": "string"
+        },
+        "knowledgeNote": {
+          "type": "string"
+        },
+        "courses": {
+          "type": "string"
+        },
+        "coursesKnowledge": {
+          "type": "string"
+        },
+        "references": {
+          "type": "string"
+        },
+        "referencesNote": {
+          "type": "string"
+        },
+        "personalProject": {
+          "type": "string"
+        },
+        "inDevelopment": {
+          "type": "string"
+        },
+        "devStopped": {
+          "type": "string"
+        },
+        "months": {
+          "minItems": 12,
+          "maxItems": 12,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "summary",
+        "competencies",
+        "work",
+        "projects",
+        "skills",
+        "education",
+        "certificates",
+        "languages",
+        "technologies",
+        "present",
+        "downloadPdf",
+        "switchLang",
+        "contact",
+        "degreeIn",
+        "knowledge",
+        "knowledgePersonal",
+        "knowledgeLearning",
+        "knowledgeNote",
+        "courses",
+        "coursesKnowledge",
+        "references",
+        "referencesNote",
+        "personalProject",
+        "inDevelopment",
+        "devStopped",
+        "months"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "es",
+    "en"
+  ],
+  "additionalProperties": false
+}

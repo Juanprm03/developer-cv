@@ -1,6 +1,5 @@
 ---
-import { loadCV } from '../lib/cv.ts';
-import { routes, ui } from '../lib/i18n.ts';
+import { anchors, routes, ui } from '../lib/i18n.ts';
 import type { Lang } from '../lib/schema.ts';
 import { withBase } from '../lib/url.ts';
 import Icon from './Icon.astro';
@@ -16,9 +15,9 @@ interface Props {
 const { lang, current, altPath, name } = Astro.props;
 const t = ui[lang];
 const other: Lang = lang === 'es' ? 'en' : 'es';
-/** Puesto actual (primer empleo sin fecha de fin), p. ej. "Cargo · Empresa". */
-const job = loadCV(lang).work.find((w) => !w.endDate);
-const role = job && `${job.position} · ${job.name}`;
+const home = withBase(routes.home[lang]);
+const onHome = current === 'home';
+
 /** En móvil: nombre de pila + primer apellido ("Nombre Segundo Apellido1 Apellido2" → "Nombre Apellido1"). */
 const parts = name.split(' ');
 const shortName = parts.length >= 4 ? `${parts[0]} ${parts[parts.length - 2]}` : name;
@@ -27,40 +26,78 @@ const initials = shortName
   .split(' ')
   .map((p) => p.charAt(0).toUpperCase())
   .join('');
+
+/** En la home, los enlaces de sección apuntan a anclas y muestran la sección activa. */
+const section = (id: string) => (onHome ? `#${id}` : `${home}#${id}`);
 const links = [
-  { key: 'projects', label: t.navProjects, href: withBase(routes.projects[lang]) },
-  { key: 'cv', label: t.navCv, href: withBase(routes.cv[lang]) },
-  { key: 'contact', label: t.navContact, href: '#contacto' },
-] as const;
+  {
+    key: 'experience',
+    label: t.navExperience,
+    href: section(anchors.experience),
+    page: false,
+    spy: onHome ? anchors.experience : undefined,
+  },
+  {
+    key: 'projects',
+    label: t.navProjects,
+    href: withBase(routes.projects[lang]),
+    page: current === 'projects',
+    spy: onHome ? anchors.projects : undefined,
+  },
+  {
+    key: 'stack',
+    label: t.navStack,
+    href: section(anchors.stack),
+    page: false,
+    spy: onHome ? anchors.stack : undefined,
+  },
+  {
+    key: 'cv',
+    label: t.navCv,
+    href: withBase(routes.cv[lang]),
+    page: current === 'cv',
+    spy: undefined,
+  },
+  {
+    key: 'contact',
+    label: t.navContact,
+    href: '#contact',
+    page: false,
+    spy: onHome ? anchors.contact : undefined,
+  },
+];
 ---
 
 <a
   href="#main"
-  class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:shadow"
+  class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-lg focus:bg-elevated focus:px-4 focus:py-2 focus:text-ink"
 >
   {t.skip}
 </a>
-<header class="no-print sticky top-0 z-40 border-b border-rule bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/70">
-  <nav class="mx-auto flex h-14 max-w-6xl items-center gap-2 px-4 sm:gap-4 sm:px-6" aria-label="Principal">
-    <a href={withBase(routes.home[lang])} class="mr-auto flex min-w-0 items-center gap-2 font-semibold tracking-tight">
-      <span class="hidden size-7 shrink-0 place-items-center sm:grid rounded-md bg-accent text-xs font-bold text-white" aria-hidden="true">{initials}</span>
-      <span class="flex min-w-0 flex-col leading-tight">
-        <span class="truncate text-sm sm:text-base"><span class="sm:hidden">{shortName}</span><span class="hidden sm:inline">{name}</span></span>
-        {role && <span class="truncate text-[11px] font-normal text-muted sm:text-xs">{role}</span>}
+<header
+  data-header
+  class="site-header no-print group/header sticky top-0 z-50 border-b border-transparent transition-[background-color,border-color,backdrop-filter] duration-300 data-[scrolled]:border-rule data-[scrolled]:bg-bg/70 data-[scrolled]:backdrop-blur-xl data-[scrolled]:backdrop-saturate-150"
+>
+  <nav class="container-page flex h-16 items-center gap-3" aria-label={t.navMain}>
+    <a href={home} class="mr-auto flex min-w-0 items-center gap-3 rounded-lg">
+      <span
+        class="grid size-9 shrink-0 place-items-center rounded-xl border border-accent/40 bg-gradient-to-br from-accent/25 to-transparent font-mono text-xs font-semibold text-ink"
+        aria-hidden="true">{initials}</span
+      >
+      <span class="truncate text-sm font-semibold tracking-tight sm:text-base">
+        <span class="sm:hidden">{shortName}</span><span class="hidden sm:inline">{name}</span>
       </span>
     </a>
-    <ul class="flex shrink-0 items-center gap-0.5 text-sm font-medium sm:gap-1">
+
+    <ul class="hidden items-center gap-1 md:flex">
       {
         links.map((l) => (
           <li>
             <a
               href={l.href}
-              aria-current={current === l.key ? 'page' : undefined}
-              class:list={[
-                'rounded-md px-2 py-1.5 transition hover:text-accent-ink sm:px-3',
-                l.key === 'contact' && 'hidden sm:inline-block',
-                current === l.key ? 'bg-chip text-accent-ink' : 'text-muted',
-              ]}
+              class="nav-link"
+              aria-current={l.page ? 'page' : undefined}
+              data-section-link={l.spy}
             >
               {l.label}
             </a>
@@ -68,16 +105,51 @@ const links = [
         ))
       }
     </ul>
+
     <a
       href={withBase(altPath)}
       data-lang-switch
       hreflang={other}
       lang={other}
-      class="flex shrink-0 items-center gap-1.5 rounded-md border border-rule px-2 py-1.5 sm:px-2.5 text-sm font-medium text-muted transition hover:border-accent hover:text-accent-ink"
+      class="flex shrink-0 items-center gap-1.5 rounded-lg border border-rule-strong px-2.5 py-1.5 font-mono text-xs font-medium text-muted transition-colors hover:border-accent/60 hover:text-ink"
     >
-      <Icon name="globe" class="hidden size-4 sm:block" />
+      <Icon name="globe" class="size-3.5" />
       <span class="uppercase">{other}</span>
       <span class="sr-only">— {t.switchLang}</span>
     </a>
+
+    <!-- Sin JS el botón no se muestra y la lista móvil queda visible (ver global.css). -->
+    <button
+      type="button"
+      data-menu-toggle
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      data-open={t.navMenu}
+      data-close={t.navClose}
+      class="size-10 place-items-center rounded-lg border border-rule-strong text-ink transition-colors hover:border-accent/60"
+    >
+      <Icon name="menu" class="size-5 group-has-[[aria-expanded=true]]/header:hidden" />
+      <Icon name="x" class="hidden size-5 group-has-[[aria-expanded=true]]/header:block" />
+      <span class="sr-only" data-label>{t.navMenu}</span>
+    </button>
   </nav>
+
+  <div id="mobile-menu" class="border-t border-rule bg-bg/95 backdrop-blur-xl md:hidden">
+    <ul class="container-page flex flex-col py-3">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class="flex items-center justify-between rounded-lg px-2 py-3 text-base font-medium text-muted hover:bg-surface hover:text-ink aria-[current=page]:text-ink"
+              aria-current={l.page ? 'page' : undefined}
+            >
+              {l.label}
+              <Icon name="arrowRight" class="size-4 opacity-60" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </header>

@@ -3,47 +3,24 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 /**
- * Casos de estudio técnicos: src/content/projects/<lang>/<slug>.mdx
- * El mismo <slug> debe existir en ambos idiomas (lo valida scripts/validate.ts).
+ * Casos de estudio: src/content/projects/<lang>/<slug>.mdx
+ *
+ * El slug es el id de un proyecto de data/profile.yaml con `caseStudy: true`. Los hechos
+ * (nombre, empresa, rol, estado, stack, enlaces, métricas, confidencialidad) viven en el
+ * perfil; el MDX solo aporta la narrativa y los diagramas. scripts/validate.ts comprueba
+ * la correspondencia y la paridad ES/EN.
  */
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
   schema: ({ image }) =>
     z.strictObject({
-      title: z.string(),
-      /** Frase de una línea para la tarjeta. */
-      tagline: z.string(),
-      client: z.string(),
-      /** Empresa desde la que se hizo el trabajo. */
-      company: z.string(),
-      role: z.string(),
-      start: z.string().regex(/^\d{4}(-\d{2})?$/),
-      end: z
-        .string()
-        .regex(/^\d{4}(-\d{2})?$/)
-        .optional(),
+      /** Frase de una línea para la tarjeta y la meta description. */
+      tagline: z.string().min(40).max(200),
       /** Orden en la landing (menor = primero). */
       order: z.number().int(),
-      /** Cifras destacadas, siempre entre comillas en YAML ("1.500" sería el número 1,5). Solo datos verificables. */
-      metrics: z
-        .array(z.strictObject({ value: z.string(), label: z.string() }))
-        .max(4)
-        .default([]),
-      stack: z.array(z.strictObject({ group: z.string(), items: z.array(z.string()).min(1) })),
-      /** Etiquetas cortas para filtrar/escanear. */
-      tags: z.array(z.string()).max(6),
-      /** Enlaces públicos (sitio en producción, repositorio). */
-      links: z
-        .array(z.strictObject({ label: z.string(), url: z.url() }))
-        .max(4)
-        .default([]),
       /** Destacado en la home y en grande en la landing (máx. 3). */
       featured: z.boolean().default(false),
-      /** `development` muestra una etiqueta "En desarrollo". */
-      status: z.enum(['production', 'development']).default('production'),
-      /** Confidencialidad: si true, no se enlaza código ni se nombran datos internos. */
-      nda: z.boolean().default(true),
-      /** Captura de la web pública (src/content/projects/covers/); sustituye al diagrama en las tarjetas destacadas. */
+      /** Captura de la web pública (src/content/projects/covers/). */
       cover: image().optional(),
     }),
 });

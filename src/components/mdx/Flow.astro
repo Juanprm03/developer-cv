@@ -1,0 +1,58 @@
+---
+/**
+ * Flujo funcional de un caso de estudio (reutilizable desde MDX).
+ *
+ * - Sin JS: lista ordenada con todas las etapas y su descripción (contenido completo).
+ * - Con JS (Base.astro, sección "Flujos"): recorrido navegable con el patrón ARIA de pestañas,
+ *   flechas/Inicio/Fin, botones Anterior/Siguiente y un conector que marca el progreso.
+ * - Las animaciones respetan prefers-reduced-motion (reglas globales de global.css).
+ */
+import { ui } from '../../lib/i18n.ts';
+import type { Lang } from '../../lib/schema.ts';
+
+interface Step {
+  title: string;
+  text: string;
+  /** Quién participa en la etapa (p. ej. "Usuario", "API"). */
+  actor?: string;
+}
+interface Props {
+  lang: Lang;
+  title: string;
+  steps: Step[];
+}
+const { lang, title, steps } = Astro.props;
+const t = ui[lang];
+const id = `flow-${title
+  .normalize('NFD')
+  .replace(/[̀-ͯ]/g, '')
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-|-$/g, '')}`;
+---
+
+<figure class="flow not-prose" data-flow data-label-step={t.flowStep} data-label-of={t.flowOf} aria-labelledby={`${id}-title`} style={`--n:${steps.length}`}>
+  <figcaption id={`${id}-title`} class="flow-title">{title}</figcaption>
+  <ol class="flow-steps" data-flow-list>
+    {
+      steps.map((s, i) => (
+        <li class="flow-step" data-flow-step>
+          <button type="button" class="flow-head" id={`${id}-tab-${i}`} data-flow-tab tabindex="-1">
+            <span class="flow-index" aria-hidden="true">{i + 1}</span>
+            <span class="flow-step-title">{s.title}</span>
+            {s.actor && <span class="flow-actor">{s.actor}</span>}
+          </button>
+          <p class="flow-text" data-flow-text>{s.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="flow-panel" id={`${id}-panel`} data-flow-panel hidden>
+    <p class="flow-panel-meta" data-flow-meta></p>
+    <p class="flow-panel-text" data-flow-panel-text></p>
+    <div class="flow-nav">
+      <button type="button" class="btn btn-secondary !px-3 !py-1.5 text-sm" data-flow-prev>← {t.flowPrev}</button>
+      <button type="button" class="btn btn-secondary !px-3 !py-1.5 text-sm" data-flow-next>{t.flowNext} →</button>
+    </div>
+  </div>
+</figure>

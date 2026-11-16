@@ -1,0 +1,245 @@
+---
+/**
+ * Composición del hero: sistema abstracto de servicios conectados (web, servicios, APIs,
+ * datos, cloud, integraciones e IA). Decorativo (aria-hidden): las mismas áreas se describen
+ * en texto en la página.
+ *
+ * Motion (CSS + APIs nativas, ver Base.astro):
+ * - entrada: las conexiones se trazan y los nodos aparecen escalonados (una vez);
+ * - ambiente: flujo de datos discreto por las conexiones, pausado fuera de pantalla
+ *   (data-paused) y desactivado con prefers-reduced-motion o en pantallas pequeñas;
+ * - interacción: parallax con el cursor (punteros finos) y resaltado de conexiones al
+ *   pasar sobre un nodo.
+ */
+import { ui } from '../lib/i18n.ts';
+import type { Lang } from '../lib/schema.ts';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+
+type Node = { id: string; x: number; y: number; title: string; sub: string; hub?: boolean };
+const nodes: Node[] = [
+  { id: 'api', x: 280, y: 236, title: 'APIs', sub: 'REST · Webhooks', hub: true },
+  { id: 'web', x: 120, y: 84, title: t.graphWeb, sub: 'React · Next.js' },
+  { id: 'ai', x: 440, y: 84, title: t.graphAi, sub: t.graphAiSub },
+  { id: 'services', x: 96, y: 252, title: t.graphServices, sub: 'Node · PHP · Python' },
+  { id: 'integrations', x: 464, y: 252, title: t.graphIntegrations, sub: t.graphIntegrationsSub },
+  { id: 'data', x: 372, y: 404, title: t.graphData, sub: 'SQL · Vector' },
+  { id: 'cloud', x: 172, y: 404, title: t.graphCloud, sub: 'AWS · Docker' },
+];
+const at = (id: string) => nodes.find((n) => n.id === id) ?? { x: 0, y: 0 };
+const edges: [string, string][] = [
+  ['web', 'api'],
+  ['services', 'api'],
+  ['api', 'ai'],
+  ['api', 'integrations'],
+  ['api', 'data'],
+  ['services', 'cloud'],
+  ['services', 'data'],
+  ['ai', 'data'],
+];
+/** Curva suave entre dos nodos. */
+const curve = (a: string, b: string) => {
+  const p = at(a);
+  const q = at(b);
+  const mx = (p.x + q.x) / 2;
+  const my = (p.y + q.y) / 2;
+  const bend = (q.x - p.x) * 0.12;
+  return `M${p.x} ${p.y} Q${mx - bend} ${my + bend} ${q.x} ${q.y}`;
+};
+---
+
+<div class="system-graph" data-graph data-parallax aria-hidden="true">
+  <svg viewBox="0 0 560 480" class="h-auto w-full" focusable="false">
+    <defs>
+      <radialGradient id="sg-core" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#3b82f6" stop-opacity="0.35"></stop>
+        <stop offset="1" stop-color="#3b82f6" stop-opacity="0"></stop>
+      </radialGradient>
+      <linearGradient id="sg-edge" x1="0" x2="1">
+        <stop offset="0" stop-color="#3b82f6" stop-opacity="0.15"></stop>
+        <stop offset="0.5" stop-color="#60a5fa" stop-opacity="0.55"></stop>
+        <stop offset="1" stop-color="#3b82f6" stop-opacity="0.15"></stop>
+      </linearGradient>
+    </defs>
+
+    <circle cx="280" cy="236" r="210" fill="url(#sg-core)"></circle>
+    <circle cx="280" cy="236" r="150" class="sg-orbit"></circle>
+    <circle cx="280" cy="236" r="208" class="sg-orbit sg-orbit--outer"></circle>
+
+    {
+      edges.map(([a, b], i) => (
+        <g class="sg-edge" data-a={a} data-b={b} style={`--i:${i}`}>
+          <path d={curve(a, b)} class="sg-line" pathLength="100" />
+          <path d={curve(a, b)} class="sg-flow" pathLength="100" />
+        </g>
+      ))
+    }
+
+    {
+      nodes.map((n, i) => (
+        <g class:list={['sg-node', n.hub && 'sg-node--hub']} data-node={n.id} style={`--i:${i}`}>
+          <g transform={`translate(${n.x} ${n.y})`}>
+            <rect x="-84" y={n.hub ? -34 : -28} width="168" height={n.hub ? 68 : 56} rx="14" class="sg-box" />
+            <circle cx="-66" cy="0" r="4" class="sg-dot" />
+            <text x="-54" y="-4" class="sg-title">{n.title}</text>
+            <text x="-54" y="14" class="sg-sub">{n.sub}</text>
+          </g>
+        </g>
+      ))
+    }
+  </svg>
+</div>
+
+<style>
+  .system-graph {
+    --px: 0;
+    --py: 0;
+    position: relative;
+    margin-inline: auto;
+    max-width: 34rem;
+    transform: perspective(1100px) rotateX(calc(var(--py) * -5deg)) rotateY(calc(var(--px) * 7deg));
+    transition: transform 600ms var(--ease-out);
+  }
+
+  .sg-orbit {
+    fill: none;
+    stroke: rgb(148 163 184 / 0.12);
+    stroke-dasharray: 2 6;
+  }
+
+  .sg-orbit--outer {
+    stroke: rgb(148 163 184 / 0.07);
+  }
+
+  .sg-line {
+    fill: none;
+    stroke: url(#sg-edge);
+    stroke-width: 1.4;
+    transition: stroke-width 300ms, opacity 300ms;
+  }
+
+  .sg-flow {
+    fill: none;
+    stroke: #93c5fd;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-dasharray: 3 97;
+    opacity: 0;
+  }
+
+  .sg-box {
+    fill: #0e1522;
+    stroke: #2a3a55;
+    stroke-width: 1;
+    transition: stroke 300ms, fill 300ms;
+  }
+
+  .sg-node--hub .sg-box {
+    fill: #121d31;
+    stroke: rgb(59 130 246 / 0.7);
+  }
+
+  .sg-dot {
+    fill: #60a5fa;
+  }
+
+  .sg-title {
+    font: 600 15px var(--font-sans);
+    fill: #f5f7fc;
+  }
+
+  .sg-sub {
+    font: 500 11px var(--font-mono);
+    fill: #a5b2c8;
+  }
+
+  /* Resaltado de las conexiones de un nodo al pasar el cursor. */
+  .sg-node {
+    cursor: default;
+  }
+
+  .sg-node:hover .sg-box {
+    stroke: #60a5fa;
+    fill: #14223a;
+  }
+
+  svg:has(.sg-node:hover) .sg-line {
+    opacity: 0.35;
+  }
+
+  svg:has([data-node='web']:hover) :is([data-a='web'], [data-b='web']) .sg-line,
+  svg:has([data-node='ai']:hover) :is([data-a='ai'], [data-b='ai']) .sg-line,
+  svg:has([data-node='api']:hover) :is([data-a='api'], [data-b='api']) .sg-line,
+  svg:has([data-node='services']:hover) :is([data-a='services'], [data-b='services']) .sg-line,
+  svg:has([data-node='integrations']:hover) :is([data-a='integrations'], [data-b='integrations']) .sg-line,
+  svg:has([data-node='data']:hover) :is([data-a='data'], [data-b='data']) .sg-line,
+  svg:has([data-node='cloud']:hover) :is([data-a='cloud'], [data-b='cloud']) .sg-line {
+    opacity: 1;
+    stroke-width: 2.4;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Entrada: conexiones trazadas y nodos escalonados (una vez). */
+    html:not(.no-intro) .sg-line {
+      stroke-dasharray: 100;
+      animation: sg-draw 1100ms var(--ease-out) both;
+      animation-delay: calc(400ms + var(--i) * 70ms);
+    }
+
+    html:not(.no-intro) .sg-node {
+      animation: sg-pop 700ms var(--ease-out) both;
+      animation-delay: calc(250ms + var(--i) * 90ms);
+    }
+
+    /* Ambiente: un pulso recorre cada conexión con desfase; pausado fuera de pantalla. */
+    .sg-flow {
+      opacity: 1;
+      animation: sg-flow 6s linear infinite;
+      animation-delay: calc(1.6s + var(--i) * 0.7s);
+    }
+
+    [data-paused] .sg-flow {
+      animation-play-state: paused;
+    }
+
+    @keyframes sg-draw {
+      from {
+        stroke-dashoffset: 100;
+      }
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes sg-pop {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.96);
+      }
+    }
+
+    @keyframes sg-flow {
+      from {
+        stroke-dashoffset: 100;
+      }
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+  }
+
+  /* En pantallas pequeñas, sin flujo continuo ni parallax: menos trabajo y menos distracción. */
+  @media (max-width: 640px) {
+    .sg-flow {
+      display: none;
+    }
+
+    .system-graph {
+      transform: none;
+    }
+  }
+</style>

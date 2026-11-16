@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../schema/variant.schema.json
+id: backend-node
+name: { es: Backend Node.js, en: Backend Node.js }
+order: 3
+title:
+  es: Juan Pablo Ruiz Marín — Backend Developer (Node.js)
+  en: Juan Pablo Ruiz Marín — Backend Developer (Node.js)
+description:
+  es: CV de Juan Pablo Ruiz Marín, desarrollador backend con Node.js, NestJS, Express, TypeScript, MySQL y AWS. Versión orientada a backend con Node.js.
+  en: Resume of Juan Pablo Ruiz Marín, backend developer working with Node.js, NestJS, Express, TypeScript, MySQL and AWS. Node.js backend edition.
+label:
+  es: Backend Developer · Node.js · NestJS · TypeScript · AWS
+  en: Backend Developer · Node.js · NestJS · TypeScript · AWS
+summary:
+  es: >-
+    Desarrollador backend con **Node.js, NestJS, Express y TypeScript**. Experiencia en APIs REST de pagos
+    con idempotencia, webhooks y autenticación por API key con guards, un servicio de notificaciones por
+    correo, Slack y WhatsApp, flujos conversacionales con WhatsApp Cloud API y OpenAI, optimización SQL y
+    despliegues en **AWS (ECS, EC2 y S3)** con Docker.
+  en: >-
+    Backend developer working with **Node.js, NestJS, Express and TypeScript**. Experience with payment REST
+    APIs with idempotency, webhooks and API-key authentication with guards, a notification service for
+    email, Slack and WhatsApp, conversational flows with WhatsApp Cloud API and OpenAI, SQL optimization
+    and **AWS (ECS, EC2 and S3)** deployments with Docker.
+tags: [node, api, payments, backend, automation]
+highlights:
+  pin: [c-pocket-payments, c-pocket-notifications]
+  maxPerJob: 7
+competencies: [node-backend, apis-integrations, payments, notifications, whatsapp, sql-performance, aws, testing]
+skills:
+  featured: [nodejs, typescript, nestjs, express, mysql, prisma, aws]
+  categories: [backend, data, cloud, quality, ai, tools, frontend]
+projects: [payments-platform, notification-service, conversational-platform, ticketing-ecosystem]
+maxPages: 2

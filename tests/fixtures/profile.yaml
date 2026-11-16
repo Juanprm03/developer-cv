@@ -1,0 +1,81 @@
+# Perfil FICTICIO para pruebas del resolutor. No describe a ninguna persona.
+updated: 2026-01
+person:
+  name: Ada Ejemplo
+  email: ada@test.invalid
+  site: https://ejemplo.test/cv/
+  location: { city: Ciudad, country: { es: País, en: Country }, countryCode: XX }
+  profiles: [{ network: GitHub, username: ada, url: https://github.test/ada }]
+site:
+  kicker: { es: Desarrolladora, en: Developer }
+  headline: { es: Titular, en: Headline }
+  intro: { es: Introducción, en: Introduction }
+  experience: { es: Experiencia, en: Experience }
+  specializations:
+    - { id: sp1, title: { es: Backend, en: Backend }, skills: [python] }
+    - { id: sp2, title: { es: Node, en: Node }, skills: [nodejs] }
+    - { id: sp3, title: { es: IA, en: AI }, skills: [openai-api] }
+  approach: { title: { es: Título, en: Title }, intro: { es: Intro, en: Intro } }
+  principles:
+    - { id: p1, title: { es: P1, en: P1 }, description: { es: D, en: D } }
+    - { id: p2, title: { es: P2, en: P2 }, description: { es: D, en: D } }
+    - { id: p3, title: { es: P3, en: P3 }, description: { es: D, en: D } }
+    - { id: p4, title: { es: P4, en: P4 }, description: { es: D, en: D }, example: { es: E, en: E } }
+  domains: [{ id: d1, text: { es: Dominio, en: Domain } }]
+capabilities:
+  - id: cap-backend
+    title: { es: Backend, en: Backend }
+    summary: { es: APIs, en: APIs }
+    skills: [python, nodejs]
+    work: [acme]
+skillCategories:
+  - { id: backend, name: { es: Backend, en: Backend } }
+  - { id: ai, name: { es: IA, en: AI } }
+skills:
+  - { id: python, name: Python, category: backend, context: professional }
+  - { id: nodejs, name: Node.js, category: backend, context: professional }
+  - { id: openai-api, name: OpenAI API, category: ai, context: professional }
+  - { id: java, name: Java, category: backend, context: personal }
+  - { id: mongodb, name: MongoDB, category: backend, context: learning }
+competencies:
+  - { id: c-py, text: { es: Backend Python, en: Python backend }, tags: [python] }
+  - { id: c-node, text: { es: Backend Node, en: Node backend }, tags: [node] }
+  - { id: c-ai, text: { es: IA aplicada, en: Applied AI }, tags: [ai] }
+work:
+  - id: acme
+    company: Acme
+    position: { es: Desarrolladora, en: Developer }
+    startDate: 2024-01
+    technologies: [python, nodejs, openai-api]
+    highlights:
+      - { id: acme-py, tags: [python, backend], text: { es: Logro Python 40 %, en: Python win 40% } }
+      - { id: acme-node, tags: [node, backend], text: { es: Logro Node, en: Node win } }
+      - { id: acme-ai, tags: [ai, python], text: { es: Logro IA, en: AI win }, project: bot }
+      - { id: acme-misc, tags: [misc], text: { es: Logro general, en: General win } }
+  - id: beta
+    company: Beta
+    position: { es: Practicante, en: Intern }
+    startDate: 2023-01
+    endDate: 2023-12
+    highlights:
+      - { id: beta-qa, tags: [quality], text: { es: Logro QA, en: QA win } }
+projects:
+  - id: bot
+    name: { es: Bot, en: Bot }
+    description: { es: Un bot, en: A bot }
+    context: professional
+    work: acme
+    caseStudy: true
+    technologies: [python, openai-api]
+    tags: [ai]
+  - id: side
+    name: { es: Paralelo, en: Side }
+    description: { es: Proyecto personal, en: Personal project }
+    context: personal
+    url: https://github.test/ada/side
+    technologies: [java]
+    tags: [java]
+education:
+  - { id: uni, institution: Uni, studyType: { es: Grado, en: Degree }, area: { es: Software, en: Software }, endDate: "2022" }
+languages:
+  - { id: es, language: { es: Español, en: Spanish }, fluency: { es: Nativo, en: Native } }

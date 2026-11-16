@@ -1,0 +1,52 @@
+---
+/** Perfil profesional: resumen, datos clave y tipos de producto (sin repetir stack ni CTAs). */
+import { formatDate } from '../lib/format.ts';
+import { anchors, ui } from '../lib/i18n.ts';
+import type { CV, Lang } from '../lib/schema.ts';
+import { domains } from '../lib/site.ts';
+import Rich from './Rich.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  cv: CV;
+  lang: Lang;
+}
+const { cv, lang } = Astro.props;
+const t = ui[lang];
+const L = cv.meta.labels;
+const edu = cv.education[0];
+// La experiencia combinada ya se muestra en el hero: aquí no se repite.
+const facts = [
+  [
+    t.factEducation,
+    edu
+      ? `${edu.studyType} ${L.degreeIn} ${edu.area} · ${edu.institution} (${edu.startDate ? `${formatDate(edu.startDate, L)}–` : ''}${formatDate(edu.endDate, L)})`
+      : '',
+  ],
+  [t.factLanguages, cv.languages.map((l) => `${l.language} · ${l.fluency}`).join(' — ')],
+  [t.factLocation, `${cv.basics.location.city}, ${cv.basics.location.country}`],
+].filter(([, v]) => v);
+---
+
+<section id={anchors.about} aria-labelledby={`${anchors.about}-title`} class="scroll-mt-24">
+  <SectionHeader id={anchors.about} kicker={t.profileKicker} title={t.profileTitle} />
+  <div class="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+    <div data-reveal>
+      <p class="text-lg leading-relaxed text-pretty text-muted sm:text-xl">
+        <Rich text={cv.basics.summary} />
+      </p>
+      <p class="mt-8 font-mono text-[11px] tracking-[0.14em] text-muted uppercase">{t.factDomains}</p>
+      <ul class="mt-3 flex flex-wrap gap-2">{domains(lang).map((d) => <li class="chip">{d}</li>)}</ul>
+    </div>
+    <dl class="card divide-y divide-rule" data-reveal style="--d:1">
+      {
+        facts.map(([k, v]) => (
+          <div class="px-5 py-4 sm:px-6">
+            <dt class="font-mono text-[11px] tracking-[0.14em] text-muted uppercase">{k}</dt>
+            <dd class="mt-1.5 leading-relaxed text-ink">{v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>

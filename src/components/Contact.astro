@@ -1,7 +1,7 @@
 ---
-import { ui } from '../lib/i18n.ts';
+import { anchors, ui } from '../lib/i18n.ts';
 import type { CV, Lang } from '../lib/schema.ts';
-import { prettyUrl, withBase } from '../lib/url.ts';
+import { prettyUrl } from '../lib/url.ts';
 import Icon, { type IconName } from './Icon.astro';
 
 interface Props {
@@ -12,54 +12,55 @@ interface Props {
 const { cv, lang } = Astro.props;
 const t = ui[lang];
 const b = cv.basics;
-const linkedin = b.profiles.find((p) => p.network.toLowerCase() === 'linkedin');
-const pdfName = `${b.name.replaceAll(' ', '_')}_CV_${lang.toUpperCase()}.pdf`;
-const secondary: { icon: IconName; label: string; href: string; download?: string }[] = [
-  ...(linkedin
-    ? [{ icon: 'linkedin' as const, label: prettyUrl(linkedin.url), href: linkedin.url }]
-    : []),
-  ...(b.phone
-    ? [{ icon: 'phone' as const, label: b.phone, href: `tel:${b.phone.replaceAll(' ', '')}` }]
-    : []),
-  {
-    icon: 'download',
-    label: cv.meta.labels.downloadPdf,
-    href: withBase(`/cv-${lang}.pdf`),
-    download: pdfName,
-  },
-];
+const icon = (network: string): IconName => {
+  const n = network.toLowerCase();
+  return n === 'linkedin' || n === 'github' ? n : 'link';
+};
 ---
 
-<section id="contacto" aria-labelledby="contact-title" class="no-print reveal scroll-mt-20">
-  <div class="relative overflow-hidden rounded-3xl border border-rule bg-surface px-6 py-12 text-center shadow-sm sm:px-12 sm:py-16 dark:shadow-none">
+<section id={anchors.contact} aria-labelledby="contact-title" class="no-print scroll-mt-24">
+  <div
+    class="spotlight relative overflow-hidden rounded-3xl border border-rule-strong bg-surface px-6 py-14 text-center sm:px-12 sm:py-20"
+    data-spotlight
+    data-reveal
+  >
+    <div class="grid-lines pointer-events-none absolute inset-0" aria-hidden="true"></div>
     <div
-      class="pointer-events-none absolute inset-x-0 -top-24 mx-auto h-48 w-2/3 rounded-full bg-accent/15 blur-3xl"
+      class="pointer-events-none absolute inset-x-0 -top-32 mx-auto h-64 w-2/3 rounded-full bg-accent/20 blur-3xl"
       aria-hidden="true"
     >
     </div>
-    <h2 id="contact-title" class="relative text-3xl font-bold tracking-tight sm:text-4xl">{t.contactTitle}</h2>
+    <p class="eyebrow relative">{t.contactKicker}</p>
+    <h2 id="contact-title" class="relative mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
+      {t.contactTitle}
+    </h2>
     <p class="relative mx-auto mt-4 max-w-xl text-pretty text-muted">{t.contactText}</p>
-    <a
-      href={`mailto:${b.email}`}
-      class="relative mt-8 inline-flex items-center gap-2 rounded-xl bg-accent-ink px-6 py-3 font-semibold text-white shadow-sm transition hover:brightness-110 dark:text-[#0b1120]"
-    >
+    <a href={`mailto:${b.email}`} class="btn btn-primary relative mt-8">
       <Icon name="mail" />
       {b.email}
     </a>
-    <ul class="relative mt-6 flex flex-wrap justify-center gap-3 text-sm">
+    <ul class="relative mt-6 flex flex-wrap justify-center gap-3">
       {
-        secondary.map((l) => (
+        b.profiles.map((p) => (
           <li>
-            <a
-              href={l.href}
-              download={l.download}
-              class="inline-flex items-center gap-2 rounded-lg border border-rule px-4 py-2 font-medium text-muted transition hover:border-accent hover:text-accent-ink"
-            >
-              <Icon name={l.icon} class="size-4" />
-              {l.label}
+            <a href={p.url} rel="me noopener" target="_blank" class="btn btn-secondary !py-2">
+              <Icon name={icon(p.network)} class="size-4" />
+              <span class="sr-only">{p.network}:</span>
+              {prettyUrl(p.url)}
+              <Icon name="arrowUpRight" class="size-3.5 opacity-60" />
             </a>
           </li>
         ))
+      }
+      {
+        b.phone && (
+          <li>
+            <a href={`tel:${b.phone.replaceAll(' ', '')}`} class="btn btn-secondary !py-2">
+              <Icon name="phone" class="size-4" />
+              {b.phone}
+            </a>
+          </li>
+        )
       }
     </ul>
   </div>

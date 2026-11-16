@@ -1,0 +1,18 @@
+---
+/** Encabezado de sección: antetítulo en mono, título y entradilla opcional. */
+interface Props {
+  id: string;
+  kicker: string;
+  title: string;
+  intro?: string | undefined;
+  class?: string;
+}
+const { id, kicker, title, intro, class: className } = Astro.props;
+---
+
+<header class:list={['max-w-3xl', className]} data-reveal>
+  <p class="eyebrow">{kicker}</p>
+  <h2 id={`${id}-title`} class="section-title">{title}</h2>
+  {intro && <p class="lead mt-4">{intro}</p>}
+  <slot />
+</header>

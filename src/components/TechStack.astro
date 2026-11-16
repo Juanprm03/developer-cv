@@ -1,0 +1,76 @@
+---
+/**
+ * Experiencia técnica por área. Cada tecnología aparece junto al trabajo y los proyectos
+ * donde se usó; las de proyectos personales van marcadas y la formación va aparte.
+ */
+import { routes, ui } from '../lib/i18n.ts';
+import type { Lang } from '../lib/schema.ts';
+import { capabilities, techTiers } from '../lib/site.ts';
+import { withBase } from '../lib/url.ts';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const items = capabilities(lang);
+const learning =
+  techTiers(lang)
+    .find((x) => x.context === 'learning')
+    ?.groups.flatMap((g) => g.skills.map((s) => s.name)) ?? [];
+---
+
+<p class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted" data-reveal>
+  <span class="inline-flex items-center gap-2"><span class="chip !px-2 !py-0.5">Aa</span>{t.legendProfessional}</span>
+  <span class="inline-flex items-center gap-2"
+    ><span class="chip !border-dashed !px-2 !py-0.5">Aa</span>{t.legendPersonal}</span
+  >
+</p>
+<ul class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+  {
+    items.map((c, i) => (
+      <li class="card spotlight flex flex-col p-6" data-spotlight data-reveal style={`--d:${i % 3}`}>
+        <h3 class="text-lg font-semibold tracking-tight">{c.title}</h3>
+        <p class="mt-2 text-sm leading-relaxed text-pretty text-muted">{c.summary}</p>
+        <ul class="mt-4 flex flex-wrap gap-1.5">
+          {c.skills.map((s) => (
+            <li class:list={['chip', s.context !== 'professional' && '!border-dashed']}>
+              {s.name}
+              {s.context !== 'professional' && <span class="sr-only"> ({t.legendPersonal})</span>}
+            </li>
+          ))}
+        </ul>
+        <p class="mt-auto pt-5 text-xs leading-relaxed text-muted">
+          {c.evidence.map((e, j) => (
+            <>
+              {j > 0 && ' · '}
+              {e.slug ? (
+                <a
+                  href={withBase(routes.project(e.slug)[lang])}
+                  class="text-accent-ink underline decoration-accent-ink/40 underline-offset-2 hover:decoration-accent-ink"
+                >
+                  {e.label}
+                </a>
+              ) : (
+                <span class="text-ink">{e.label}</span>
+              )}
+            </>
+          ))}
+        </p>
+      </li>
+    ))
+  }
+  {
+    learning.length > 0 && (
+      <li class="flex flex-col rounded-2xl border border-dashed border-rule-strong p-6" data-reveal>
+        <h3 class="text-lg font-semibold tracking-tight">{t.learningTitle}</h3>
+        <p class="mt-2 text-sm leading-relaxed text-muted">{t.learningNote}</p>
+        <ul class="mt-4 flex flex-wrap gap-1.5">
+          {learning.map((s) => (
+            <li class="rounded-full px-3 py-1 text-xs font-medium text-muted ring-1 ring-rule-strong">{s}</li>
+          ))}
+        </ul>
+      </li>
+    )
+  }
+</ul>

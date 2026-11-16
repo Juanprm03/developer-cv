@@ -2,163 +2,149 @@
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { loadCV } from '../lib/cv.ts';
-import { formatDate } from '../lib/format.ts';
 import { routes, ui } from '../lib/i18n.ts';
-import { type Project, projectSlug } from '../lib/projects.ts';
+import type { ProjectView } from '../lib/projects.ts';
 import type { Lang } from '../lib/schema.ts';
-import { withBase } from '../lib/url.ts';
+import { prettyUrl, withBase } from '../lib/url.ts';
 import Contact from './Contact.astro';
 import Icon from './Icon.astro';
 import SiteNav from './SiteNav.astro';
 
 interface Props {
   lang: Lang;
-  entry: Project;
-  prev?: Project | undefined;
-  next?: Project | undefined;
+  project: ProjectView;
+  prev?: ProjectView | undefined;
+  next?: ProjectView | undefined;
 }
 
-const { lang, entry, prev, next } = Astro.props;
+const { lang, project: p, prev, next } = Astro.props;
 const cv = loadCV(lang);
 const t = ui[lang];
-const L = cv.meta.labels;
-const d = entry.data;
-const slug = projectSlug(entry);
 const other: Lang = lang === 'es' ? 'en' : 'es';
-const { Content, headings } = await render(entry);
+const { Content, headings } = await render(p.entry);
 const toc = headings.filter((h) => h.depth === 2);
-const period = `${formatDate(d.start, L)} – ${d.end ? formatDate(d.end, L) : L.present}`;
+const site = Astro.site ?? new URL('http://localhost:4321');
+
+const facts: [string, string][] = [
+  [p.context === 'professional' ? t.company : t.context, p.organization],
+  [t.role, p.role],
+];
+if (p.status)
+  facts.push([
+    t.status,
+    { development: t.statusDevelopment, stopped: t.statusStopped, production: t.statusProduction }[
+      p.status
+    ],
+  ]);
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  headline: d.title,
-  description: d.tagline,
+  headline: p.title,
+  description: p.tagline,
   inLanguage: lang,
+  url: new URL(withBase(routes.project(p.slug)[lang]), site).href,
   author: { '@type': 'Person', name: cv.basics.name, url: cv.basics.url },
-  about: d.tags,
+  about: p.technologies,
+  ...(p.url && { codeRepository: p.url }),
 };
 ---
 
 <Base
   cv={cv}
-  title={`${d.title} — ${cv.basics.name}`}
-  description={d.tagline}
-  paths={routes.project(slug)}
+  title={`${p.title} — ${cv.basics.name}`}
+  description={p.tagline}
+  paths={routes.project(p.slug)}
   jsonLd={jsonLd}
+  ogType="article"
 >
-  <SiteNav lang={lang} current="projects" altPath={routes.project(slug)[other]} name={cv.basics.name} />
+  <SiteNav lang={lang} current="projects" altPath={routes.project(p.slug)[other]} name={cv.basics.name} />
 
-  <main id="main" class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
-    <a
-      href={withBase(routes.projects[lang])}
-      class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-accent-ink"
-    >
+  <main id="main" class="container-page py-10 lg:py-14">
+    <a href={withBase(routes.projects[lang])} class="link-arrow !text-muted hover:!text-ink">
       <Icon name="arrowLeft" class="size-4" />
       {t.allProjects}
     </a>
 
-    <header class="mt-6 max-w-4xl">
-      <div class="flex flex-wrap items-center gap-1.5">
-      {d.status === 'development' && (
-        <span class="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:text-amber-300">
-          <span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true" />
-          {t.inDevelopment}
-        </span>
-      )}
-      <ul class="flex flex-wrap gap-1.5" aria-label={t.stack}>
+    <header class="mt-8 max-w-4xl" data-stagger>
+      <div class="flex flex-wrap items-center gap-2" style="--i:0">
+        <span class="chip-accent">{p.context === 'personal' ? t.personal : t.professional}</span>
         {
-          d.tags.map((tag) => (
-            <li class="rounded-md border border-chip-border bg-chip px-2 py-0.5 text-xs font-medium text-accent-ink">
-              {tag}
-            </li>
-          ))
+          p.status === 'development' && (
+            <span class="chip border-amber-400/30 bg-amber-400/10 text-amber-200">{t.statusDevelopment}</span>
+          )
         }
-      </ul>
+        {
+          p.status === 'stopped' && <span class="chip text-muted">{t.statusStopped}</span>
+        }
+        {
+          p.confidential && (
+            <span class="chip gap-1.5">
+              <Icon name="lock" class="size-3" />
+              {t.confidential}
+            </span>
+          )
+        }
       </div>
-      <h1 class="mt-4 text-3xl font-bold tracking-tight text-balance sm:text-5xl">{d.title}</h1>
-      <p class="mt-4 text-lg leading-relaxed text-pretty text-muted">{d.tagline}</p>
+      <h1 class="mt-5 text-4xl leading-tight font-semibold tracking-tight sm:text-6xl" style="--i:1">{p.title}</h1>
+      <p class="lead mt-5" style="--i:2">{p.tagline}</p>
 
       {
-        d.links.length > 0 && (
-          <ul class="mt-6 flex flex-wrap gap-2" aria-label={t.liveLinks}>
-            {d.links.map((l) => (
-              <li>
-                <a
-                  href={l.url}
-                  rel="noopener"
-                  target="_blank"
-                  class="inline-flex items-center gap-1.5 rounded-lg border border-rule bg-surface px-3 py-1.5 text-sm font-medium transition hover:border-accent hover:text-accent-ink"
-                >
-                  <Icon name="link" class="size-3.5" />
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+        p.url && (
+          <a href={p.url} rel="noopener" target="_blank" class="btn btn-secondary mt-7" style="--i:3">
+            <Icon name={p.url.includes('github.com') ? 'github' : 'externalLink'} class="size-4" />
+            {prettyUrl(p.url)}
+            <Icon name="arrowUpRight" class="size-3.5 opacity-60" />
+          </a>
         )
       }
-
-      <dl class="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-4">
-        {
-          [
-            [t.client, d.client],
-            [t.company, d.company],
-            [t.role, d.role],
-            [t.period, period],
-          ].map(([k, v]) => (
-            <div>
-              <dt class="text-xs text-muted">{k}</dt>
-              <dd class="mt-0.5 font-medium">{v}</dd>
-            </div>
-          ))
-        }
-      </dl>
     </header>
 
+    <dl class:list={['mt-10 grid gap-3', facts.length === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2']} data-reveal>
+      {
+        facts.map(([k, v]) => (
+          <div class="card p-4">
+            <dt class="font-mono text-[11px] tracking-[0.14em] text-muted uppercase">{k}</dt>
+            <dd class="mt-1.5 font-medium text-ink">{v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
     {
-      d.metrics.length > 0 && (
-        <dl class="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {d.metrics.map((m) => (
-            <div class="rounded-xl border border-rule bg-surface p-4">
-              <dt class="text-xs leading-snug text-muted">{m.label}</dt>
-              <dd class="mt-1 text-2xl font-bold text-accent-ink tabular-nums">{m.value}</dd>
-            </div>
-          ))}
-        </dl>
+      p.metrics.length > 0 && (
+        <section class="mt-3" aria-label={t.metrics} data-reveal>
+          <dl class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {p.metrics.map((m) => (
+              <div class="card p-4">
+                <dt class="text-xs leading-snug text-muted">{m.label}</dt>
+                <dd class="mt-1 font-mono text-2xl font-semibold text-accent-ink">{m.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       )
     }
 
-    <section aria-labelledby="stack-title" class="mt-6 rounded-2xl border border-rule bg-surface p-5 sm:p-6">
-      <h2 id="stack-title" class="text-xs font-bold tracking-[0.12em] text-accent-ink uppercase">{t.stack}</h2>
-      <dl class="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
-        {
-          d.stack.map((s) => (
-            <div>
-              <dt class="text-xs font-semibold">{s.group}</dt>
-              <dd class="mt-1.5 flex flex-wrap gap-1">
-                {s.items.map((i) => (
-                  <span class="rounded bg-bg px-1.5 py-0.5 text-xs text-muted ring-1 ring-rule">{i}</span>
-                ))}
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
+    <section aria-labelledby="stack-title" class="card mt-3 p-5 sm:p-6" data-reveal>
+      <h2 id="stack-title" class="font-mono text-[11px] tracking-[0.14em] text-muted uppercase">{t.stack}</h2>
+      <ul class="mt-3 flex flex-wrap gap-1.5">
+        {p.technologies.map((tech) => <li class="chip">{tech}</li>)}
+      </ul>
     </section>
 
     {
       toc.length > 0 && (
-        <nav aria-labelledby="toc-title" class="mt-8">
+        <nav aria-labelledby="toc-title" class="no-print mt-10">
           <h2 id="toc-title" class="sr-only">{t.onThisPage}</h2>
           <ol class="flex flex-wrap gap-2 text-sm">
             {toc.map((h, i) => (
               <li>
                 <a
                   href={`#${h.slug}`}
-                  class="inline-flex items-center gap-2 rounded-full border border-rule px-3 py-1 text-muted transition hover:border-accent hover:text-accent-ink"
+                  class="inline-flex items-center gap-2 rounded-full border border-rule-strong px-3 py-1.5 text-muted transition-colors hover:border-accent/60 hover:text-ink"
                 >
-                  <span class="text-xs font-semibold text-accent-ink tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="font-mono text-xs text-accent-ink">{String(i + 1).padStart(2, '0')}</span>
                   {h.text}
                 </a>
               </li>
@@ -168,12 +154,12 @@ const jsonLd = {
       )
     }
 
-    <article class="prose-cv prose mt-4 max-w-none prose-headings:tracking-tight prose-h2:mt-14 prose-h2:border-b prose-h2:border-rule prose-h2:pb-2 prose-a:underline-offset-4">
+    <article class="prose-cv prose prose-lg mt-6 max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-h2:mt-14 prose-a:underline-offset-4">
       <Content />
     </article>
 
     {
-      d.nda && (
+      p.confidential && (
         <p class="mt-10 flex max-w-3xl gap-2 text-xs leading-relaxed text-muted">
           <Icon name="lock" class="mt-0.5 size-3.5 shrink-0" />
           {t.nda}
@@ -181,18 +167,14 @@ const jsonLd = {
       )
     }
 
-    <div class="mt-20">
-      <Contact cv={cv} lang={lang} />
-    </div>
-
-    <nav class="mt-16 grid gap-4 border-t border-rule pt-8 sm:grid-cols-2" aria-label={t.allProjects}>
+    <nav class="no-print mt-20 grid gap-4 sm:grid-cols-2" aria-label={t.allProjects}>
       {
         prev ? (
-          <a href={withBase(routes.project(projectSlug(prev))[lang])} class="group rounded-xl border border-rule p-4 hover:border-accent">
-            <span class="flex items-center gap-1 text-xs text-muted">
+          <a href={withBase(routes.project(prev.slug)[lang])} class="project-card group p-5">
+            <span class="flex items-center gap-1.5 font-mono text-xs text-muted">
               <Icon name="arrowLeft" class="size-3.5" /> {t.prev}
             </span>
-            <span class="mt-1 block font-semibold group-hover:text-accent-ink">{prev.data.title}</span>
+            <span class="mt-2 block font-semibold text-ink">{prev.title}</span>
           </a>
         ) : (
           <span />
@@ -200,14 +182,18 @@ const jsonLd = {
       }
       {
         next && (
-          <a href={withBase(routes.project(projectSlug(next))[lang])} class="group rounded-xl border border-rule p-4 text-right hover:border-accent">
-            <span class="flex items-center justify-end gap-1 text-xs text-muted">
+          <a href={withBase(routes.project(next.slug)[lang])} class="project-card group p-5 text-right">
+            <span class="flex items-center justify-end gap-1.5 font-mono text-xs text-muted">
               {t.next} <Icon name="arrowRight" class="size-3.5" />
             </span>
-            <span class="mt-1 block font-semibold group-hover:text-accent-ink">{next.data.title}</span>
+            <span class="mt-2 block font-semibold text-ink">{next.title}</span>
           </a>
         )
       }
     </nav>
+
+    <div class="mt-24">
+      <Contact cv={cv} lang={lang} />
+    </div>
   </main>
 </Base>

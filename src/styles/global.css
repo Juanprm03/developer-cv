@@ -2,131 +2,623 @@
 @plugin "@tailwindcss/typography";
 
 /*
- * Tokens de diseño. Mantener sincronizados con typst/cv.typ.
- * Todas las combinaciones de texto cumplen WCAG AA (≥ 4.5:1).
+ * ─── Midnight Engineering ──────────────────────────────────────────────────
+ * Dark premium como experiencia principal (no hay modo claro a medias).
+ * Contrastes comprobados (WCAG 2.2 AA, texto normal ≥ 4.5:1):
+ *   --text   #F5F7FC sobre --bg 18.6:1 · sobre --elevated 13.6:1
+ *   --muted  #A5B2C8 sobre --bg  9.3:1 · sobre --elevated  6.8:1
+ *   --accent-ink #60A5FA sobre --bg 7.8:1 · sobre --elevated 5.7:1  (texto de acento)
+ *   blanco sobre --button #2563EB 5.2:1                              (botón primario)
+ * --accent (#3B82F6) se reserva a bordes, glow e indicadores (no a texto pequeño
+ * sobre --elevated, donde baja de 4.5:1).
+ * Si cambias colores, sincroniza typst/cv.typ, typst/og.typ y src/lib/mermaid-theme.mjs.
  */
 :root {
-  color-scheme: light dark;
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --ink: #1e293b;
-  --muted: #64748b;
-  --rule: #e2e8f0;
-  --accent: #e5484d; /* decorativo: barras, puntos, bordes */
-  --accent-ink: #c9302c; /* texto sobre fondo claro (5.3:1) */
-  --chip: #fff1f1;
-  --chip-border: #fbd5d6;
-}
+  color-scheme: dark;
+  --bg: #07090f;
+  --surface: #111826;
+  --elevated: #1b2940;
+  --rule: #1e2a3d;
+  --rule-strong: #2a3a55;
+  --text: #f5f7fc;
+  --muted: #a5b2c8;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-ink: #60a5fa;
+  --button: #2563eb;
+  --button-hover: #1d4ed8;
+  --glow: 59 130 246;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b1120;
-    --surface: #111827;
-    --ink: #e2e8f0;
-    --muted: #94a3b8;
-    --rule: #1f2937;
-    --accent: #ff6b70;
-    --accent-ink: #ff7a7e;
-    --chip: #2a1519;
-    --chip-border: #4a1d22;
-  }
+  /* Motion: duraciones y curvas comunes. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur: 420ms;
+  --dur-slow: 700ms;
 }
 
 @theme inline {
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
   --color-bg: var(--bg);
   --color-surface: var(--surface);
-  --color-ink: var(--ink);
-  --color-muted: var(--muted);
+  --color-elevated: var(--elevated);
   --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --color-accent-ink: var(--accent-ink);
-  --color-chip: var(--chip);
-  --color-chip-border: var(--chip-border);
+  --color-button: var(--button);
 }
 
 @layer base {
   html {
     @apply bg-bg font-sans text-ink antialiased;
-    font-feature-settings: "cv11", "ss01"; /* Inter: dígitos y 'a' más legibles */
+    font-feature-settings: "cv11", "ss01";
     text-rendering: optimizeLegibility;
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    @apply min-h-dvh bg-bg;
   }
 
   :focus-visible {
-    @apply rounded-sm outline-2 outline-offset-2 outline-accent;
+    @apply rounded-md outline-2 outline-offset-4 outline-accent-hover;
   }
 
   ::selection {
-    @apply bg-accent text-white;
+    @apply bg-accent/40 text-white;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
   }
 }
 
-/* Prosa de los casos de estudio, ligada a los tokens (claro/oscuro automático). */
+/* ─── Fondo ambiental ──────────────────────────────────────────────────────
+ * Glow estático y discreto (sin animaciones infinitas) y una retícula técnica que se
+ * desvanece. En escritorio el hero añade un foco que sigue al cursor (ver Base.astro).
+ */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 36rem at 85% -10%, rgb(var(--glow) / 0.13), transparent 60%),
+    radial-gradient(40rem 28rem at -10% 20%, rgb(99 102 241 / 0.06), transparent 60%);
+}
+
+.grid-lines {
+  background-image:
+    linear-gradient(to right, rgb(148 163 184 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(148 163 184 / 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* ─── Componentes ──────────────────────────────────────────────────────── */
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply font-mono text-xs font-medium tracking-[0.18em] text-accent-ink uppercase;
+  }
+
+  .section-title {
+    @apply mt-3 text-3xl font-semibold tracking-tight text-ink sm:text-4xl;
+  }
+
+  .lead {
+    @apply text-lg leading-relaxed text-pretty text-muted;
+  }
+
+  .card {
+    @apply relative rounded-2xl border border-rule bg-surface/80;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full border border-rule-strong bg-elevated/60 px-3 py-1 text-xs font-medium text-ink;
+  }
+
+  .chip-accent {
+    @apply inline-flex items-center rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-medium text-accent-ink;
+  }
+
+  .tag-mono {
+    @apply inline-flex items-center rounded-md bg-elevated px-2 py-0.5 font-mono text-[11px] text-muted;
+  }
+
+  /* Botones con microinteracciones: elevación, brillo y desplazamiento del icono. */
+  .btn {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold;
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+
+  .btn svg {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .btn:hover svg:last-child:not(:first-child) {
+    transform: translateX(3px);
+  }
+
+  .btn:active {
+    transform: translateY(1px) scale(0.99);
+  }
+
+  .btn-primary {
+    @apply bg-button text-white;
+    box-shadow:
+      0 0 0 1px rgb(var(--glow) / 0.5),
+      0 10px 30px -12px rgb(var(--glow) / 0.7);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--button-hover);
+    box-shadow:
+      0 0 0 1px rgb(var(--glow) / 0.7),
+      0 14px 40px -12px rgb(var(--glow) / 0.85);
+  }
+
+  .btn-secondary {
+    @apply border border-rule-strong bg-surface/70 text-ink backdrop-blur;
+  }
+
+  .btn-secondary:hover {
+    @apply border-accent/60 bg-elevated;
+  }
+
+  .btn-ghost {
+    @apply text-muted;
+  }
+
+  .btn-ghost:hover {
+    @apply text-ink;
+  }
+
+  .link-arrow {
+    @apply inline-flex items-center gap-1.5 text-sm font-semibold text-accent-ink;
+    text-underline-offset: 5px;
+  }
+
+  .link-arrow:hover {
+    @apply underline;
+  }
+
+  .link-arrow svg {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .link-arrow:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* Enlaces de navegación con indicador animado (subrayado que crece). */
+  .nav-link {
+    @apply relative rounded-md px-3 py-2 text-sm font-medium text-muted;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0.75rem;
+    bottom: 0.3rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .nav-link:hover {
+    @apply text-ink;
+  }
+
+  .nav-link[aria-current="page"],
+  .nav-link[data-active] {
+    @apply text-ink;
+  }
+
+  .nav-link[aria-current="page"]::after,
+  .nav-link[data-active]::after {
+    transform: scaleX(1);
+  }
+
+  /* Foco que sigue al cursor (variables --mx/--my desde Base.astro). */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+    background: radial-gradient(
+      28rem circle at var(--mx, 50%) var(--my, 50%),
+      rgb(var(--glow) / 0.12),
+      transparent 45%
+    );
+    transition: opacity var(--dur) var(--ease-out);
+  }
+
+  .spotlight:hover::before,
+  .spotlight:focus-within::before {
+    opacity: 1;
+  }
+
+  /* Tarjeta de proyecto: elevación suave y borde iluminado (hover y foco de teclado). */
+  .project-card {
+    @apply relative overflow-hidden rounded-2xl border border-rule bg-surface/80;
+    transition:
+      transform var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+
+  .project-card:hover,
+  .project-card:focus-within {
+    @apply border-accent/50;
+    box-shadow:
+      0 0 0 1px rgb(var(--glow) / 0.25),
+      0 24px 60px -30px rgb(var(--glow) / 0.55);
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .project-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .project-card:hover .project-thumb img {
+      transform: scale(1.03);
+    }
+  }
+
+  .project-thumb img {
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  /* Filtros del catálogo. */
+  .filter-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-rule-strong bg-surface px-3.5 py-1.5 text-sm font-medium text-muted;
+    transition:
+      color var(--dur-fast),
+      border-color var(--dur-fast),
+      background-color var(--dur-fast);
+  }
+
+  .filter-chip:hover {
+    @apply border-accent/60 text-ink;
+  }
+
+  .filter-chip[aria-pressed="true"] {
+    @apply border-accent bg-accent/15 text-ink;
+  }
+}
+
+/* ─── Menú móvil ────────────────────────────────────────────────────────────
+ * Sin JS: el botón no existe visualmente y la lista se muestra. Con JS (html.js, que se
+ * añade antes de pintar): lista plegada y botón visible, sin saltos de maquetación.
+ */
+[data-menu-toggle] {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  html.js [data-menu-toggle] {
+    display: grid;
+  }
+
+  html.js #mobile-menu:not(.is-open) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #mobile-menu.is-open {
+    animation: menu-in var(--dur) var(--ease-out);
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+}
+
+/* ─── Flujos funcionales de los casos de estudio (src/components/mdx/Flow.astro) ──
+ * Sin JS: lista vertical con todas las etapas. Con JS (.flow[data-enhanced]): recorrido
+ * navegable con conector de progreso; horizontal en escritorio, vertical en móvil.
+ */
+.flow {
+  margin-block: 2.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, var(--surface), rgb(17 24 38 / 0.55));
+}
+
+.flow-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.flow-steps {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.flow-step {
+  position: relative;
+  padding-left: 2.6rem;
+}
+
+/* Conector vertical entre etapas. */
+.flow-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 0.95rem;
+  top: 2rem;
+  bottom: -0.75rem;
+  width: 2px;
+  background: var(--rule-strong);
+  transition: background-color var(--dur) var(--ease-out);
+}
+
+.flow-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--text);
+  background: none;
+  border: 0;
+  padding: 0.2rem 0;
+  cursor: default;
+}
+
+.flow-index {
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule-strong);
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  transition:
+    background-color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out);
+}
+
+.flow-step-title {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.flow-actor {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.flow-text {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ── Modo navegable (con JS) ── */
+.flow[data-enhanced] .flow-head {
+  cursor: pointer;
+  border-radius: 0.6rem;
+}
+
+.flow[data-enhanced] .flow-head:hover .flow-step-title {
+  color: var(--accent-hover);
+}
+
+.flow[data-enhanced] .flow-text {
+  display: none;
+}
+
+.flow[data-enhanced] [data-done] .flow-index,
+.flow[data-enhanced] [aria-selected="true"] .flow-index {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.flow[data-enhanced] [aria-selected="true"] .flow-index {
+  background: var(--button);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgb(var(--glow) / 0.18);
+}
+
+.flow[data-enhanced] [data-flow-step][data-done]::before {
+  background: var(--accent);
+}
+
+.flow-panel {
+  margin-top: 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 0.8rem;
+  background: var(--bg);
+}
+
+.flow-panel-meta {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-ink);
+}
+
+.flow-panel-text {
+  margin: 0.4rem 0 0;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.flow-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.flow-nav [disabled] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flow[data-enhanced] .flow-panel-text {
+    animation: flow-in var(--dur) var(--ease-out);
+  }
+
+  @keyframes flow-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+}
+
+/* Escritorio: etapas en horizontal con conector entre ellas. */
+@media (min-width: 900px) {
+  .flow[data-enhanced] .flow-steps {
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .flow[data-enhanced] .flow-step {
+    padding-left: 0;
+    padding-top: 2.75rem;
+  }
+
+  .flow[data-enhanced] .flow-index {
+    left: 0;
+    top: 0;
+  }
+
+  .flow[data-enhanced] .flow-step:not(:last-child)::before {
+    left: 2.4rem;
+    right: 0.4rem;
+    top: 0.95rem;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+  }
+
+  .flow[data-enhanced] .flow-head {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+}
+
+/* ─── Timeline de experiencia ─────────────────────────────────────────────
+ * Cada tramo de la línea se dibuja al revelarse su elemento (revelado progresivo).
+ */
+.timeline > li {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline > li::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 0.75rem;
+  bottom: -0.75rem;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent), var(--rule-strong));
+  transform-origin: top;
+}
+
+.timeline > li:last-child::before {
+  bottom: 0;
+  background: linear-gradient(to bottom, var(--rule-strong), transparent);
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 4px rgb(var(--glow) / 0.12);
+}
+
+/* ─── Prosa de los casos de estudio ────────────────────────────────────── */
 .prose-cv {
-  --tw-prose-body: var(--ink);
-  --tw-prose-headings: var(--ink);
+  --tw-prose-body: #d4dcea;
+  --tw-prose-headings: var(--text);
   --tw-prose-lead: var(--muted);
   --tw-prose-links: var(--accent-ink);
-  --tw-prose-bold: var(--ink);
+  --tw-prose-bold: var(--text);
   --tw-prose-counters: var(--muted);
   --tw-prose-bullets: var(--accent);
   --tw-prose-hr: var(--rule);
-  --tw-prose-quotes: var(--ink);
+  --tw-prose-quotes: var(--text);
   --tw-prose-quote-borders: var(--accent);
   --tw-prose-captions: var(--muted);
-  --tw-prose-code: var(--ink);
-  --tw-prose-pre-bg: var(--bg);
-  --tw-prose-pre-code: var(--ink);
+  --tw-prose-code: var(--text);
+  --tw-prose-pre-bg: var(--surface);
+  --tw-prose-pre-code: var(--text);
   --tw-prose-th-borders: var(--rule);
   --tw-prose-td-borders: var(--rule);
 }
 
-/* Texto con ancho de lectura cómodo; los diagramas usan todo el ancho disponible. */
-.prose-cv > :not(picture) {
-  max-width: 50rem;
+.prose-cv > :not(figure) {
+  max-width: 46rem;
 }
 
 .prose-cv :where(h2) {
-  scroll-margin-top: 5rem;
-}
-
-.prose-cv :where(h3) {
-  scroll-margin-top: 5rem;
-}
-
-/* Diagramas Mermaid (SVG generado en build): tarjeta con scroll horizontal en móvil. */
-.prose-cv :where(picture) {
-  display: block;
-  overflow-x: auto;
-  margin-block: 1.75rem;
-  padding: 1.25rem;
-  border: 1px solid var(--rule);
-  border-radius: 0.75rem;
-  background: var(--surface);
-  text-align: center;
-}
-
-.prose-cv :where(picture img) {
-  display: inline-block;
-  max-width: 100%;
-  height: auto;
-  margin: 0;
-}
-
-/*
- * En móvil cada diagrama se escala según su ancho natural (--w, lo inyecta
- * src/lib/rehype-diagram-width.mjs): los estrechos caben sin scroll y los anchos
- * se muestran al 75 % con scroll horizontal, sin quedar ilegibles.
- */
-@media (max-width: 640px) {
-  .prose-cv :where(picture) {
-    padding: 0.75rem;
-  }
-
-  .prose-cv :where(picture img) {
-    max-width: none;
-    width: min(var(--w, 36rem), max(100%, calc(var(--w, 36rem) * 0.75)));
-  }
+  scroll-margin-top: 6rem;
 }
 
 .prose-cv :where(code)::before,
@@ -135,45 +627,158 @@
 }
 
 .prose-cv :where(:not(pre) > code) {
-  padding: 0.1em 0.35em;
-  border-radius: 0.3em;
-  background: var(--bg);
+  padding: 0.12em 0.4em;
+  border-radius: 0.35em;
+  background: var(--elevated);
   font-weight: 500;
-  box-shadow: inset 0 0 0 1px var(--rule);
+  font-size: 0.875em;
 }
 
 .prose-cv :where(pre) {
   border: 1px solid var(--rule);
 }
 
-@media (prefers-color-scheme: dark) {
-  .prose-cv .astro-code,
-  .prose-cv .astro-code span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
+/* Tablas de los casos de estudio: se adaptan al ancho sin provocar scroll horizontal. */
+.prose-cv :where(table) {
+  width: 100%;
+  table-layout: fixed;
+  font-size: 0.9em;
+}
+
+.prose-cv :where(th, td) {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  vertical-align: top;
+}
+
+@media (max-width: 640px) {
+  .prose-cv :where(table) {
+    font-size: 0.8em;
+  }
+
+  .prose-cv :where(th, td) {
+    padding-inline: 0.35em;
   }
 }
 
-/* Chips del filtro de proyectos. */
-.filter-chip {
-  @apply inline-flex items-center gap-1.5 rounded-full border border-rule bg-surface px-3 py-1.5 text-sm font-medium text-muted transition hover:border-accent hover:text-accent-ink;
+/* Diagramas Mermaid (SVG en build, envueltos en <figure> por rehype-diagram-width). */
+.prose-cv .diagram {
+  margin-block: 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, var(--surface), rgb(17 24 38 / 0.6));
+  overflow-x: auto;
+  text-align: center;
 }
 
-.filter-chip[aria-pressed="true"] {
-  @apply border-accent bg-chip text-accent-ink;
+.prose-cv .diagram img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
 }
 
-/*
- * Movimiento, solo si el usuario no pide reducirlo, y en CSS nativo (0 KB de JS): las
- * secciones aparecen al hacer scroll (scroll-driven animations; sin soporte, se ven normal).
- * Sin View Transitions ni animación del hero: al cambiar de idioma superponían los textos de
- * ambas páginas y la animación se repetía en cada navegación.
+.prose-cv .diagram figcaption {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* En móvil, cada diagrama se escala según su ancho natural (--w): los estrechos caben
+ * sin scroll y los anchos se muestran al 75 % con scroll horizontal. */
+@media (max-width: 640px) {
+  .prose-cv .diagram {
+    padding: 0.75rem;
+  }
+
+  .prose-cv .diagram img {
+    max-width: none;
+    width: min(var(--w, 36rem), max(100%, calc(var(--w, 36rem) * 0.75)));
+  }
+}
+
+/* ─── Motion ───────────────────────────────────────────────────────────────
+ * Principios: solo transform/opacity; nada se oculta sin JS: las reglas de revelado
+ * dependen de html.reveal-ready, que el script de Base.astro añade SOLO cuando el
+ * IntersectionObserver ya está activo (si el script falla, todo queda visible);
+ * todo se desactiva con reduced motion.
  */
 @media (prefers-reduced-motion: no-preference) {
-  @keyframes rise-in {
+  /* Entrada escalonada del hero (CSS puro; --i = posición). */
+  @keyframes rise {
     from {
       opacity: 0;
-      transform: translateY(12px);
+      transform: translateY(18px);
+      filter: blur(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
+
+  html:not(.no-intro) [data-stagger] > * {
+    animation: rise var(--dur-slow) var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 90ms + 60ms);
+  }
+
+  /* Revelado al hacer scroll (IntersectionObserver añade .is-visible). */
+  html.reveal-ready [data-reveal]:not(.is-visible) {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  html.reveal-ready [data-reveal] {
+    transition:
+      opacity var(--dur-slow) var(--ease-out),
+      transform var(--dur-slow) var(--ease-out);
+    transition-delay: calc(var(--d, 0) * 70ms);
+  }
+
+  /* Timeline: el tramo de línea crece cuando su elemento se revela. */
+  html.reveal-ready .timeline > li[data-reveal]::before {
+    transform: scaleY(0);
+    transition: transform 900ms var(--ease-out) 150ms;
+  }
+
+  html.reveal-ready .timeline > li.is-visible::before {
+    transform: scaleY(1);
+  }
+
+  /* Diagramas: aparición suave con un leve zoom. */
+  html.reveal-ready .diagram[data-reveal]:not(.is-visible) {
+    transform: translateY(16px) scale(0.985);
+  }
+
+  /* Transiciones de navegación entre páginas (View Transitions entre documentos). */
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 220ms;
+  }
+
+  .site-header {
+    view-transition-name: site-header;
+  }
+}
+
+/* En móvil, revelados más cortos y sin desenfoque (menos trabajo de composición). */
+@media (prefers-reduced-motion: no-preference) and (max-width: 640px) {
+  html:not(.no-intro) [data-stagger] > * {
+    animation-duration: 480ms;
+    animation-name: rise-mobile;
+  }
+
+  @keyframes rise-mobile {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
@@ -181,12 +786,8 @@
     }
   }
 
-  @supports (animation-timeline: view()) {
-    .reveal {
-      animation: rise-in linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 35%;
-    }
+  html.reveal-ready [data-reveal]:not(.is-visible) {
+    transform: translateY(12px);
   }
 }
 
@@ -194,18 +795,25 @@
   *,
   *::before,
   *::after {
-    transition: none !important;
-    animation: none !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-/* Impresión desde el navegador: una columna, sin controles. El PDF oficial lo genera Typst. */
+/* ─── Impresión desde el navegador (el PDF oficial lo genera Typst) ─────── */
 @media print {
   :root {
+    color-scheme: light;
     --bg: #fff;
     --surface: #fff;
-    --ink: #000;
-    --muted: #444;
+    --elevated: #f1f5f9;
+    --rule: #dbe3ef;
+    --rule-strong: #cbd5e1;
+    --text: #0f172a;
+    --muted: #475569;
+    --accent-ink: #1d4ed8;
   }
 
   @page {
@@ -217,7 +825,8 @@
     font-size: 11px;
   }
 
-  .no-print {
+  .no-print,
+  .ambient {
     display: none !important;
   }
 
@@ -226,10 +835,16 @@
     box-shadow: none !important;
     border: 0 !important;
     padding: 0 !important;
+    background: none !important;
   }
 
   article,
   section {
     break-inside: avoid-page;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

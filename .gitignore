@@ -1,7 +1,7 @@
 node_modules/
 dist/
 .astro/
-public/cv-*.pdf
+public/*.pdf
 *:Zone.Identifier
 .DS_Store
 .env*
@@ -9,3 +9,14 @@ public/og-*.png
 
 # CV original de partida: solo consulta local
 reference/
+
+# Datos resueltos para Typst (scripts/build-pdf.ts)
+.cache/
+
+# CV internos de postulación (variantes especializadas): nunca se versionan ni publican
+private/
+
+# Instrucciones locales para asistentes de IA: no forman parte del proyecto publicado
+AGENTS.md
+CLAUDE.md
+.claude/

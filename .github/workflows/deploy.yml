@@ -5,7 +5,7 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
-  # Reconstrucción mensual: mantiene al día la duración del empleo actual.
+  # Reconstrucción mensual: mantiene al día la duración de un empleo en curso.
   schedule:
     - cron: '0 6 1 * *'
 
@@ -37,9 +37,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # rehype-mermaid renderiza los diagramas a SVG en build con Chromium.
-      - name: Install Chromium (diagramas Mermaid)
-        run: pnpm exec playwright install --with-deps chromium
+      # rehype-mermaid renderiza los diagramas a SVG en build con Chromium (también lo usa
+      # la auditoría de accesibilidad). poppler-utils aporta pdftotext para validar los PDF.
+      - name: Install Chromium y pdftotext
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          sudo apt-get install -y --no-install-recommends poppler-utils
 
       - id: pages
         if: github.event_name != 'pull_request'
@@ -48,18 +51,33 @@ jobs:
       - name: Check (datos, tipos, lint)
         run: pnpm check
 
+      - name: Tests (resolutor, integridad, paridad)
+        run: pnpm test
+
+      # Incluye: PDF de todas las variantes, verificación con pdftotext y enlaces internos.
       - name: Build (PDF + web)
         run: pnpm build
         env:
-          SITE: ${{ steps.pages.outputs.origin }}
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # Referencias profesionales (datos de terceros): solo en el PDF, nunca en el repositorio.
+          CV_REFERENCES: ${{ secrets.CV_REFERENCES }}
+          # Obligatorio al publicar; los PR (p. ej. desde forks) no reciben secretos.
+          CV_REQUIRE_REFERENCES: ${{ github.event_name != 'pull_request' && '1' || '0' }}
+          SITE: ${{ steps.pages.outputs.origin || 'https://juanprm03.github.io' }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path || '/developer-cv' }}
+
+      - name: Accesibilidad (axe, sin JS, teclado)
+        run: pnpm a11y
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path || '/developer-cv' }}
 
       # En PRs, los PDFs quedan como artefacto descargable para revisarlos antes de publicar.
       - uses: actions/upload-artifact@v7
         if: github.event_name == 'pull_request'
         with:
           name: cv-pdf
+          # Solo el CV público: las variantes internas nunca se suben como artefacto.
           path: dist/cv-*.pdf
+          if-no-files-found: error
 
       - uses: actions/upload-pages-artifact@v5
         if: github.event_name != 'pull_request'

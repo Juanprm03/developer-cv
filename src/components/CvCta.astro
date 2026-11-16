@@ -1,0 +1,49 @@
+---
+/** CTA único de CV: el PDF público en el idioma de la página y el CV web. */
+import { anchors, cvFileName, cvHref, routes, ui } from '../lib/i18n.ts';
+import type { Lang } from '../lib/schema.ts';
+import { withBase } from '../lib/url.ts';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  name: string;
+  /** En la página del CV no se enlaza a sí misma. */
+  showWeb?: boolean;
+}
+const { lang, name, showWeb = true } = Astro.props;
+const t = ui[lang];
+---
+
+<section id={anchors.resume} aria-labelledby={`${anchors.resume}-title`} class="scroll-mt-24">
+  <div
+    class="card spotlight flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8"
+    data-spotlight
+    data-reveal
+  >
+    <div class="flex items-start gap-4">
+      <span class="grid size-12 shrink-0 place-items-center rounded-xl border border-rule-strong bg-elevated text-accent-ink">
+        <Icon name="fileText" class="size-6" />
+      </span>
+      <div>
+        <p class="eyebrow">{t.cvKicker}</p>
+        <h2 id={`${anchors.resume}-title`} class="mt-1.5 text-2xl font-semibold tracking-tight">{t.cvTitle}</h2>
+        <p class="mt-1 text-sm text-muted">{t.cvText}</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <a href={withBase(cvHref(name, lang))} download={cvFileName(name, lang)} hreflang={lang} type="application/pdf" class="btn btn-primary">
+        <Icon name="download" />
+        {t.cvPdfLang}
+      </a>
+      {
+        showWeb && (
+          <a href={withBase(routes.cv[lang])} class="btn btn-secondary">
+            {t.cvWeb}
+            <Icon name="arrowRight" />
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>

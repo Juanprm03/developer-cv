@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../schema/variant.schema.json
+# General Fullstack: variante por defecto (web, cv-es.pdf y cv-en.pdf). Perfil transversal.
+# Una variante SOLO selecciona y prioriza hechos de data/profile.yaml.
+id: general
+name: { es: General Fullstack, en: General Fullstack }
+order: 1
+default: true
+title:
+  es: "Juan Pablo Ruiz Marín — Fullstack Software Developer | Backend, Cloud & AI"
+  en: "Juan Pablo Ruiz Marín — Fullstack Software Developer | Backend, Cloud & AI"
+description:
+  es: Juan Pablo Ruiz Marín, desarrollador fullstack con Node.js, NestJS, Laravel, Python, React, Next.js y AWS. Portafolio, proyectos y CV.
+  en: Juan Pablo Ruiz Marín, fullstack developer working with Node.js, NestJS, Laravel, Python, React, Next.js and AWS. Portfolio, projects and resume.
+label:
+  es: "Fullstack Software Developer | Backend, Cloud & AI"
+  en: "Fullstack Software Developer | Backend, Cloud & AI"
+summary:
+  es: >-
+    Desarrollador de software fullstack con más de 2 años de experiencia combinada entre trabajo
+    profesional y proyectos personales. Construyo aplicaciones web, APIs REST, servicios backend e
+    integraciones con **Node.js, TypeScript, NestJS, Python/FastAPI, PHP/Laravel y React** para
+    productos fintech, SaaS y de automatización basados en servicios independientes. Trabajo con
+    bases de datos SQL, **AWS** y Docker, y aplico IA con agentes y servicios externos. Me adapto
+    rápido a nuevos stacks, entiendo las necesidades del negocio y desarrollo soluciones mantenibles
+    orientadas a resultados.
+  en: >-
+    Fullstack software developer with over 2 years of combined experience across professional work
+    and personal projects. I build web applications, REST APIs, backend services and integrations with
+    **Node.js, TypeScript, NestJS, Python/FastAPI, PHP/Laravel and React** for fintech, SaaS and
+    automation products built as independent services. I work with SQL databases, **AWS** and Docker,
+    and apply AI through agents and external services. I adapt quickly to new stacks, understand
+    business needs and deliver maintainable, results-oriented solutions.
+# Sin etiquetas: perfil transversal con todos los logros en el orden del perfil.
+tags: []
+highlights:
+  maxPerJob: 12
+  exclude: [c-pocket-mcp]
+# C-Pocket agrupado por responsabilidades (textos literales del perfil).
+groups:
+  c-pocket:
+    - title: { es: "Backend, APIs e integraciones", en: "Backend, APIs & integrations" }
+      highlights: [c-pocket-ecosystem, c-pocket-payments, c-pocket-notifications, c-pocket-sql]
+    - title: { es: Aplicaciones web fullstack, en: Fullstack web applications }
+      highlights: [c-pocket-ticketing, c-pocket-proptech, c-pocket-operations]
+    - title: { es: IA y automatización conversacional, en: AI & conversational automation }
+      highlights: [c-pocket-whatsapp, c-pocket-conversational-ai, c-pocket-ai-backend]
+    - title: { es: Cloud y calidad, en: Cloud & quality }
+      highlights: [c-pocket-aws, c-pocket-quality]
+# Las tecnologías de cada empleo ya figuran en "Habilidades técnicas".
+workTechnologies: false
+competencies: [fullstack-web, apis-integrations, node-backend, php-backend, python-backend, web-react, payments, applied-ai, aws, testing]
+skills:
+  featured: [nodejs, typescript, nestjs, laravel, python, react, nextjs, mysql, postgresql, aws]
+  categories: [backend, frontend, data, ai, cloud, quality, tools]
+  # MCP: integración en desarrollo, sin implementación verificada; no se presenta como habilidad.
+  exclude: [mcp]
+# Los productos de C-Pocket ya se describen en la experiencia; aquí, evidencia adicional.
+projects: [modular-erp, developer-cv]
+# Conocimientos complementarios (contexto learning): sección propia, nunca experiencia.
+knowledge: [java, spring-boot, angular, mongodb]
+maxPages: 2
+# Única variante publicada en el sitio (cv-es.pdf / cv-en.pdf). Las demás son internas.
+public: true
+# Nota final del CV: referencias disponibles a solicitud (sin datos de terceros).
+referencesNote: true

@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=../../schema/variant.schema.json
+id: backend-python
+name: { es: Backend Python, en: Backend Python }
+order: 2
+title:
+  es: Juan Pablo Ruiz Marín — Backend Developer (Python)
+  en: Juan Pablo Ruiz Marín — Backend Developer (Python)
+description:
+  es: CV de Juan Pablo Ruiz Marín, desarrollador backend con Python, FastAPI, PostgreSQL, pgvector y AWS. Versión orientada a backend con Python.
+  en: Resume of Juan Pablo Ruiz Marín, backend developer working with Python, FastAPI, PostgreSQL, pgvector and AWS. Python backend edition.
+label:
+  es: Backend Developer · Python · FastAPI · PostgreSQL · AWS
+  en: Backend Developer · Python · FastAPI · PostgreSQL · AWS
+summary:
+  es: >-
+    Desarrollador backend con **Python y FastAPI**. Participé en un backend para agentes de IA
+    y búsqueda semántica con **PostgreSQL y pgvector**, y trabajo con APIs REST, optimización SQL,
+    transacciones y despliegues en **AWS** con Docker. En mi ERP modular personal uso Django,
+    Django REST Framework y pruebas automatizadas con pytest.
+  en: >-
+    Backend developer working with **Python and FastAPI**. I took part in a backend for AI agents
+    and semantic search with **PostgreSQL and pgvector**, and I work with REST APIs, SQL optimization,
+    transactions and **AWS** deployments with Docker. In my personal modular ERP I use Django,
+    Django REST Framework and automated testing with pytest.
+tags: [python, backend, data, ai]
+highlights:
+  pin: [c-pocket-ai-backend, c-pocket-sql]
+  maxPerJob: 6
+competencies: [python-backend, apis-integrations, sql-performance, applied-ai, aws, testing]
+skills:
+  featured: [python, fastapi, postgresql, pgvector, redis, aws]
+  categories: [backend, data, ai, cloud, quality, tools, frontend]
+projects: [ai-backend, modular-erp, conversational-platform, payments-platform]
+knowledge: [django, drf, pytest]
+maxPages: 2

@@ -1,6 +1,8 @@
 ---
 import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
+import SiteFooter from '../components/SiteFooter.astro';
 import { plain } from '../lib/format.ts';
 import type { CV, Lang } from '../lib/schema.ts';
 import { withBase } from '../lib/url.ts';
@@ -14,9 +16,11 @@ interface Props {
   paths?: Record<Lang, string>;
   /** JSON-LD propio; si se omite, se usa el ProfilePage/Person del CV. */
   jsonLd?: Record<string, unknown>;
+  /** Tipo Open Graph. */
+  ogType?: 'profile' | 'website' | 'article';
 }
 
-const { cv, paths = { es: '/', en: '/en/' } } = Astro.props;
+const { cv, paths = { es: '/', en: '/en/' }, ogType = 'profile' } = Astro.props;
 const { meta, basics } = cv;
 const title = Astro.props.title ?? meta.title;
 const description = Astro.props.description ?? meta.description;
@@ -42,7 +46,6 @@ const profileLd = {
     name: basics.name,
     jobTitle: basics.label,
     description: plain(basics.summary),
-    email: `mailto:${basics.email}`,
     url: canonical,
     image: ogImage,
     address: {
@@ -68,6 +71,23 @@ const jsonLd = Astro.props.jsonLd ?? profileLd;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      Antes de pintar: marca que hay JS (los revelados solo ocultan contenido con html.js)
+      y, si se llega desde el selector de idioma, omite la intro del hero y la transición
+      de vista para que los textos de ambos idiomas no se superpongan.
+    -->
+    <script is:inline>
+      (() => {
+        const d = document.documentElement;
+        d.classList.add('js');
+        try {
+          if (sessionStorage.getItem('lang-switch-scroll')) d.classList.add('no-intro');
+        } catch {}
+        addEventListener('pagereveal', (e) => {
+          if (e.viewTransition && d.classList.contains('no-intro')) e.viewTransition.skipTransition();
+        });
+      })();
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={basics.name} />
@@ -75,31 +95,210 @@ const jsonLd = Astro.props.jsonLd ?? profileLd;
     {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#07090f" />
+    <meta name="color-scheme" content="dark" />
 
-    <meta property="og:type" content="profile" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={basics.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${basics.name} — ${cv.home.kicker}`} />
     <meta property="og:locale" content={meta.lang === 'es' ? 'es_CO' : 'en_US'} />
+    <meta property="og:locale:alternate" content={meta.lang === 'es' ? 'en_US' : 'es_CO'} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
   </head>
-  <body class="min-h-dvh">
+  <body>
+    <div class="ambient" aria-hidden="true"></div>
+    <div data-top-sentinel class="absolute inset-x-0 top-0 h-px" aria-hidden="true"></div>
     <slot />
+    <SiteFooter cv={cv} />
 
     <!--
-      Al cambiar de idioma se conserva la posición relativa del scroll (las dos versiones de
-      cada página tienen la misma estructura). Mejora progresiva: sin JS o sin sessionStorage,
-      la página simplemente abre arriba.
+      Motion e interacción con APIs nativas (sin dependencias). Mejora progresiva: sin JS
+      o sin IntersectionObserver todo el contenido es visible y la navegación funciona.
     -->
     <script is:inline>
       (() => {
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const hasIO = 'IntersectionObserver' in window;
+
+        // 1. Revelado al hacer scroll (una sola vez por elemento).
+        const reveal = document.querySelectorAll('[data-reveal]');
+        if (!hasIO || reduce) reveal.forEach((el) => el.classList.add('is-visible'));
+        else {
+          const io = new IntersectionObserver(
+            (entries) => {
+              for (const e of entries)
+                if (e.isIntersecting) {
+                  e.target.classList.add('is-visible');
+                  io.unobserve(e.target);
+                }
+            },
+            { rootMargin: '0px 0px -8% 0px', threshold: 0.06 },
+          );
+          reveal.forEach((el) => io.observe(el));
+          // El estado oculto solo se activa con el observer en marcha: si algo falla antes,
+          // el contenido queda visible.
+          document.documentElement.classList.add('reveal-ready');
+        }
+
+        // 2. Cabecera "glass" al desplazarse: un centinela en lugar de un listener de scroll.
+        const header = document.querySelector('[data-header]');
+        const sentinel = document.querySelector('[data-top-sentinel]');
+        if (header && sentinel && hasIO)
+          new IntersectionObserver(([e]) =>
+            header.toggleAttribute('data-scrolled', !e.isIntersecting),
+          ).observe(sentinel);
+
+        // 3. Indicador de sección activa (solo en la home, donde existen las secciones).
+        const links = [...document.querySelectorAll('[data-section-link]')];
+        const sections = links
+          .map((l) => document.getElementById(l.dataset.sectionLink))
+          .filter(Boolean);
+        if (sections.length && hasIO) {
+          const spy = new IntersectionObserver(
+            (entries) => {
+              for (const e of entries)
+                if (e.isIntersecting)
+                  for (const l of links)
+                    l.toggleAttribute('data-active', l.dataset.sectionLink === e.target.id);
+            },
+            { rootMargin: '-40% 0px -55% 0px' },
+          );
+          sections.forEach((s) => spy.observe(s));
+        }
+
+        // 4. Menú móvil accesible: botón con aria-expanded, cierre con Escape y al navegar.
+        const toggle = document.querySelector('[data-menu-toggle]');
+        const panel = toggle && document.getElementById(toggle.getAttribute('aria-controls'));
+        if (toggle && panel) {
+          const label = toggle.querySelector('[data-label]');
+          const set = (open, focus) => {
+            toggle.setAttribute('aria-expanded', String(open));
+            panel.classList.toggle('is-open', open);
+            if (label) label.textContent = open ? toggle.dataset.close : toggle.dataset.open;
+            if (open && focus) panel.querySelector('a')?.focus();
+          };
+          set(false);
+          toggle.addEventListener('click', () =>
+            set(toggle.getAttribute('aria-expanded') !== 'true', true),
+          );
+          panel.addEventListener('click', (e) => {
+            if (e.target.closest('a')) set(false);
+          });
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+              set(false);
+              toggle.focus();
+            }
+          });
+          matchMedia('(min-width: 768px)').addEventListener('change', (e) => e.matches && set(false));
+        }
+
+        // 5. Foco que sigue al cursor, solo con puntero fino y sin reduced motion.
+        if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+          let frame = 0;
+          document.addEventListener(
+            'pointermove',
+            (e) => {
+              const el = e.target instanceof Element && e.target.closest('[data-spotlight]');
+              if (!el) return;
+              cancelAnimationFrame(frame);
+              frame = requestAnimationFrame(() => {
+                const r = el.getBoundingClientRect();
+                el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+                el.style.setProperty('--my', `${e.clientY - r.top}px`);
+              });
+            },
+            { passive: true },
+          );
+        }
+
+        // 6. Composición del hero: pausa el flujo fuera de pantalla y parallax con el cursor.
+        const graph = document.querySelector('[data-graph]');
+        if (graph && hasIO)
+          new IntersectionObserver(([e]) => graph.toggleAttribute('data-paused', !e.isIntersecting)).observe(graph);
+        if (graph && !reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+          const host = graph.closest('[data-spotlight]') ?? graph;
+          let raf = 0;
+          host.addEventListener('pointermove', (e) => {
+            cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(() => {
+              const r = graph.getBoundingClientRect();
+              const clamp = (v) => Math.max(-1, Math.min(1, v));
+              graph.style.setProperty('--px', clamp((e.clientX - r.left - r.width / 2) / r.width).toFixed(3));
+              graph.style.setProperty('--py', clamp((e.clientY - r.top - r.height / 2) / r.height).toFixed(3));
+            });
+          }, { passive: true });
+          host.addEventListener('pointerleave', () => {
+            graph.style.setProperty('--px', '0');
+            graph.style.setProperty('--py', '0');
+          });
+        }
+
+        // 7. Flujos de los casos de estudio: recorrido navegable (patrón ARIA de pestañas).
+        for (const flow of document.querySelectorAll('[data-flow]')) {
+          const tabs = [...flow.querySelectorAll('[data-flow-tab]')];
+          const steps = [...flow.querySelectorAll('[data-flow-step]')];
+          const texts = [...flow.querySelectorAll('[data-flow-text]')];
+          const panel = flow.querySelector('[data-flow-panel]');
+          const meta = flow.querySelector('[data-flow-meta]');
+          const out = flow.querySelector('[data-flow-panel-text]');
+          const prev = flow.querySelector('[data-flow-prev]');
+          const next = flow.querySelector('[data-flow-next]');
+          if (!tabs.length || !panel || !out) continue;
+          const list = flow.querySelector('[data-flow-list]');
+          list.setAttribute('role', 'tablist');
+          list.setAttribute('aria-labelledby', flow.getAttribute('aria-labelledby'));
+          steps.forEach((s) => s.setAttribute('role', 'presentation'));
+          panel.setAttribute('role', 'tabpanel');
+          tabs.forEach((tab) => {
+            tab.setAttribute('role', 'tab');
+            tab.setAttribute('aria-controls', panel.id);
+          });
+          const select = (i, focus) => {
+            tabs.forEach((tab, j) => {
+              tab.setAttribute('aria-selected', String(j === i));
+              tab.tabIndex = j === i ? 0 : -1;
+              steps[j]?.toggleAttribute('data-done', j < i);
+            });
+            panel.setAttribute('aria-labelledby', tabs[i].id);
+            meta.textContent = `${flow.dataset.labelStep} ${i + 1} ${flow.dataset.labelOf} ${tabs.length}`;
+            out.textContent = texts[i]?.textContent ?? '';
+            // Reinicia la animación de entrada del texto.
+            out.style.animation = 'none';
+            void out.offsetWidth;
+            out.style.animation = '';
+            prev.disabled = i === 0;
+            next.disabled = i === tabs.length - 1;
+            if (focus) tabs[i].focus();
+          };
+          const current = () => tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+          tabs.forEach((tab, i) => {
+            tab.addEventListener('click', () => select(i, false));
+            tab.addEventListener('keydown', (e) => {
+              const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+              if (k) select((i + k + tabs.length) % tabs.length, true);
+              else if (e.key === 'Home') select(0, true);
+              else if (e.key === 'End') select(tabs.length - 1, true);
+              else return;
+              e.preventDefault();
+            });
+          });
+          prev.addEventListener('click', () => select(Math.max(0, current() - 1), false));
+          next.addEventListener('click', () => select(Math.min(tabs.length - 1, current() + 1), false));
+          panel.hidden = false;
+          flow.setAttribute('data-enhanced', '');
+          select(0, false);
+        }
+
+        // 8. Cambio de idioma: conserva la posición relativa del scroll.
         const KEY = 'lang-switch-scroll';
         const maxScroll = () => document.documentElement.scrollHeight - innerHeight;
         try {
@@ -108,7 +307,7 @@ const jsonLd = Astro.props.jsonLd ?? profileLd;
             sessionStorage.removeItem(KEY);
             const { path, ratio } = JSON.parse(saved);
             if (path === location.pathname && ratio > 0) {
-              const restore = () => scrollTo(0, Math.round(ratio * maxScroll()));
+              const restore = () => scrollTo({ top: Math.round(ratio * maxScroll()), behavior: 'instant' });
               restore();
               addEventListener('load', restore, { once: true });
             }

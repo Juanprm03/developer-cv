@@ -1,0 +1,34 @@
+---
+/**
+ * Experiencia en cifras: solo indicadores definidos y con evidencia (data/profile.yaml →
+ * site.figures). Cada cifra muestra su definición para no sugerir más de lo que mide.
+ */
+import { anchors, ui } from '../lib/i18n.ts';
+import type { CV, Lang } from '../lib/schema.ts';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  cv: CV;
+  lang: Lang;
+}
+const { cv, lang } = Astro.props;
+const t = ui[lang];
+const figures = cv.home.figures;
+---
+
+{
+  figures.length > 0 && (
+    <section id={anchors.figures} aria-labelledby={`${anchors.figures}-title`} class="scroll-mt-24">
+      <SectionHeader id={anchors.figures} kicker={t.figuresKicker} title={t.figuresTitle} intro={t.figuresIntro} />
+      <dl class="mt-10 grid gap-4 md:grid-cols-3">
+        {figures.map((f, i) => (
+          <div class="card spotlight flex flex-col p-6 sm:p-7" data-spotlight data-reveal style={`--d:${i}`}>
+            <dt class="order-2 mt-3 text-base leading-snug font-medium text-ink">{f.label}</dt>
+            <dd class="order-1 font-mono text-4xl font-semibold tracking-tight text-accent-ink sm:text-5xl">{f.value}</dd>
+            <dd class="order-3 mt-auto border-t border-rule pt-4 text-sm leading-relaxed text-muted">{f.note}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  )
+}

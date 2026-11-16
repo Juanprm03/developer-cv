@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=../../schema/variant.schema.json
+# OPCIONAL. Java y Spring Boot tienen contexto `learning` en el perfil: solo aparecen en
+# la sección de conocimientos en formación, nunca como experiencia laboral.
+id: java-spring
+name: { es: Java / Spring Boot (opcional), en: Java / Spring Boot (optional) }
+order: 5
+optional: true
+title:
+  es: Juan Pablo Ruiz Marín — Backend Developer (TypeScript · Java en formación)
+  en: Juan Pablo Ruiz Marín — Backend Developer (TypeScript · Java in progress)
+description:
+  es: CV de Juan Pablo Ruiz Marín, desarrollador backend con TypeScript, NestJS y SQL. Java y Spring Boot figuran como conocimientos en formación.
+  en: Resume of Juan Pablo Ruiz Marín, backend developer with TypeScript, NestJS and SQL. Java and Spring Boot are listed as knowledge in progress.
+label:
+  es: Backend Developer · TypeScript · NestJS · SQL · Java/Spring Boot en formación
+  en: Backend Developer · TypeScript · NestJS · SQL · Java/Spring Boot in progress
+summary:
+  es: >-
+    Desarrollador backend con experiencia profesional en **TypeScript, NestJS y Node.js**: módulos,
+    inyección de dependencias, guards, Prisma ORM y SQL en servicios de pagos y notificaciones. **Java y
+    Spring Boot** son conocimientos en formación adquiridos fuera del trabajo; no los presento como
+    experiencia laboral.
+  en: >-
+    Backend developer with professional experience in **TypeScript, NestJS and Node.js**: modules,
+    dependency injection, guards, Prisma ORM and SQL in payment and notification services. **Java and
+    Spring Boot** are knowledge in progress gained outside work; I do not present them as professional
+    experience.
+tags: [backend, node, api, data]
+highlights:
+  pin: [c-pocket-payments]
+  maxPerJob: 6
+competencies: [node-backend, apis-integrations, payments, sql-performance, aws, testing]
+skills:
+  featured: [typescript, nestjs, nodejs, postgresql, mysql, prisma]
+  categories: [backend, data, cloud, quality, tools, ai, frontend]
+projects: [payments-platform, notification-service, modular-erp]
+knowledge: [java, spring-boot, angular, mongodb]
+maxPages: 2

@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import rehypeMermaid from 'rehype-mermaid';
-import { mermaidDark, mermaidLight } from './src/lib/mermaid-theme.mjs';
+import { mermaidDark } from './src/lib/mermaid-theme.mjs';
 import rehypeDiagramWidth from './src/lib/rehype-diagram-width.mjs';
 
 // En GitHub Actions, SITE y BASE_PATH los inyecta actions/configure-pages.
@@ -29,10 +29,10 @@ export default defineConfig({
   markdown: {
     // Mermaid se renderiza a SVG en build (Playwright); sin JS en el cliente.
     syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
-    shikiConfig: { themes: { light: 'github-light', dark: 'github-dark' } },
+    shikiConfig: { theme: 'github-dark-dimmed' },
     processor: unified({
       rehypePlugins: [
-        [rehypeMermaid, { strategy: 'img-svg', mermaidConfig: mermaidLight, dark: mermaidDark }],
+        [rehypeMermaid, { strategy: 'img-svg', mermaidConfig: mermaidDark }],
         rehypeDiagramWidth,
       ],
     }),

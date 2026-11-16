@@ -1,0 +1,51 @@
+---
+tagline: "Servicio de notificaciones y eventos en NestJS: correo con reintentos, Slack y WhatsApp, tickets PDF con QR y reportes programados."
+order: 5
+---
+
+## Descripción general
+
+Servicio centralizado que recibe eventos de los productos del ecosistema y los convierte en notificaciones por correo, Slack y WhatsApp, además de generar documentos como tickets PDF con código QR.
+
+## Problema que resuelve
+
+Evitar que cada producto implemente sus propios envíos y dar seguimiento al estado de cada notificación.
+
+## Mi contribución y la del equipo
+
+Fui uno de los principales contribuidores del servicio (**NestJS, TypeScript y Prisma**):
+
+- Módulos de correo (con reintentos), Slack y WhatsApp, incluido un controlador de webhook con validación de la configuración.
+- Seguimiento del estado de cada notificación con Prisma.
+- Generación de tickets PDF con código QR y pruebas de integridad del QR.
+- Reportes programados: correo diario de entregas con un Excel de varias hojas, que se omite si no hay datos, y alertas de ventas.
+- Documentación de las APIs con Swagger / OpenAPI.
+
+## Integraciones
+
+WhatsApp Cloud API, Slack API, correo electrónico y los servicios de pagos y tickets que originan los eventos.
+
+## Arquitectura
+
+```mermaid
+flowchart LR
+  accTitle: Servicio de notificaciones y eventos
+  accDescr: Los productos del ecosistema envían eventos al servicio NestJS, que registra el estado de cada notificación, genera documentos PDF con QR cuando hace falta y entrega por correo, Slack o WhatsApp; las tareas programadas generan reportes periódicos.
+  P["Eventos de los productos"] --> N["Servicio de notificaciones (NestJS)"]
+  T["Tareas programadas"] --> N
+  N --> S[("Estado de envíos")]
+  N --> D["Documentos PDF con QR"]
+  N --> E["Correo"]
+  N --> K["Slack"]
+  N --> W["WhatsApp"]
+```
+
+## Desafíos y soluciones
+
+- **Entregas fiables**: reintentos en el envío de correo y registro del estado de cada notificación.
+- **Documentos verificables**: pruebas que comprueban la integridad de los bytes del QR en el PDF.
+- **Reportes útiles**: Excel con resumen, desglose y detalle, y omisión del envío en días sin datos.
+
+## Estado
+
+Funcionalidades descritas implementadas.

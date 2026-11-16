@@ -1,0 +1,30 @@
+---
+/** "Cómo trabajo": principios con un ejemplo real de la experiencia cuando existe. */
+import { ui } from '../lib/i18n.ts';
+import type { CV, Lang } from '../lib/schema.ts';
+
+interface Props {
+  principles: CV['principles'];
+  lang: Lang;
+}
+const { principles, lang } = Astro.props;
+const t = ui[lang];
+---
+
+<ol class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+  {
+    principles.map((p, i) => (
+      <li class="card spotlight flex flex-col p-6 sm:p-7" data-spotlight data-reveal style={`--d:${i % 3}`}>
+        <p class="font-mono text-xs text-accent-ink tabular-nums">{String(i + 1).padStart(2, '0')}</p>
+        <h3 class="mt-3 text-xl font-semibold tracking-tight text-balance">{p.title}</h3>
+        <p class="mt-3 leading-relaxed text-pretty text-muted">{p.description}</p>
+        {p.example && (
+          <p class="mt-auto border-t border-rule pt-4 text-sm leading-relaxed text-pretty">
+            <span class="font-mono text-[11px] tracking-[0.14em] text-accent-ink uppercase">{t.exampleLabel}</span>
+            <span class="mt-1.5 block text-ink/90">{p.example}</span>
+          </p>
+        )}
+      </li>
+    ))
+  }
+</ol>

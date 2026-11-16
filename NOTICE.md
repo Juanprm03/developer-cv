@@ -4,8 +4,9 @@
 
 Este proyecto deriva de [inehosa1/cv](https://github.com/inehosa1/cv), de **Ricardo Andrés Arango Ruiz**.
 
-- La arquitectura, el código, las plantillas (Astro y Typst), los scripts y la documentación para agentes
-  (`AGENTS.md` y `CLAUDE.md`) se reutilizan **con autorización del autor**.
+- La arquitectura, el código, las plantillas (Astro y Typst), los scripts y la documentación técnica
+  (adaptada en [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)) se reutilizan **con autorización del
+  autor**.
 - El repositorio original **no declara ninguna licencia**. Este proyecto no asume ninguna, y la
   autorización recibida no implica una licencia abierta (MIT u otra) sobre ese código.
 - No se han incorporado el historial Git, los datos personales ni los casos de estudio del proyecto
@@ -24,7 +25,8 @@ Distribuida bajo la SIL Open Font License 1.1; el texto completo está en
 ### Iconos Lucide (`src/components/Icon.astro`)
 
 Los trazados SVG de los iconos proceden de [Lucide](https://lucide.dev), bajo la licencia ISC.
-Los iconos `arrow-left`, `arrow-right`, `download`, `link` y `lock` derivan del proyecto
+Los iconos `arrow-left`, `arrow-right`, `arrow-up-right`, `download`, `external-link`, `link`, `lock` y `x`
+derivan del proyecto
 [Feather](https://feathericons.com) y están además bajo la licencia MIT. Textos tomados de
 https://github.com/lucide-icons/lucide/blob/main/LICENSE:
 
@@ -72,5 +74,7 @@ SOFTWARE.
 
 ### Dependencias npm
 
-Las dependencias declaradas en `package.json` (Astro, Tailwind CSS, Zod, Mermaid, Playwright, etc.) se
-instalan desde npm y conservan sus propias licencias; no se redistribuyen en este repositorio.
+Las dependencias declaradas en `package.json` (Astro, Tailwind CSS, Zod, Mermaid, Playwright, Vitest,
+axe-core, etc.) se instalan desde npm y conservan sus propias licencias; no se redistribuyen en este
+repositorio. El sitio publicado sirve las fuentes web Inter Variable y JetBrains Mono Variable
+(paquetes `@fontsource-variable/*`), ambas bajo la SIL Open Font License 1.1.

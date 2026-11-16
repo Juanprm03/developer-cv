@@ -1,0 +1,29 @@
+---
+tagline: "A YAML master profile generates this bilingual portfolio and the PDF resume, with strict validation, tests and CI/CD."
+order: 9
+---
+
+## Context
+
+My resume is not edited in a word processor: it is **compiled**. This site and the PDF resume come from a single master profile. The code is public at [github.com/Juanprm03/developer-cv](https://github.com/Juanprm03/developer-cv) and builds on the architecture of [inehosa1/cv](https://github.com/inehosa1/cv), reused with its author's permission.
+
+```mermaid
+flowchart LR
+  accTitle: developer-cv data flow
+  accDescr: The master profile and the variants are validated with Zod; a pure resolver produces a resume per variant and language, which feeds the Astro website and the Typst PDFs; GitHub Actions publishes the result to GitHub Pages.
+  P["profile.yaml"] --> Z{"Zod"}
+  V["variants/*.yaml"] --> Z
+  Z -- "error" --> X["Build fails"]
+  Z -- "ok" --> R["Pure resolver"]
+  R --> A["Astro · ES/EN site"]
+  R --> T["Typst · PDF resume"]
+  A & T --> GH["GitHub Actions → Pages"]
+```
+
+## Decisions
+
+- **Master profile with stable ids**: experience, projects, skills and achievements are referenced by id; translations live next to each fact.
+- **Variants that only select**: besides the public resume, it generates internal versions for job applications that prioritize achievements by tags and cannot add facts.
+- **Context for every skill**: professional, personal or training. Tests prevent presenting training as professional experience.
+- **Typst for the PDF**: real single-column text, ATS-friendly, with automatic page control.
+- **Accessible motion**: CSS and IntersectionObserver animations that respect `prefers-reduced-motion` and never hide content without JavaScript.

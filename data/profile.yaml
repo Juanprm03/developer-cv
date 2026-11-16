@@ -1,0 +1,616 @@
+# yaml-language-server: $schema=../schema/profile.schema.json
+#
+# PERFIL MAESTRO: única fuente de hechos profesionales. Web y PDF se derivan de aquí.
+#
+# Fuentes (revisadas en lectura, sin modificar):
+# - CV previos del propietario y sus notas de verificación.
+# - Repositorios del empleador: README, manifiestos y autoría de commits propios.
+# - Confirmaciones del propietario (email, SENA 2023–2025, C-Pocket oct. 2025 – oct. 2026).
+#
+# Niveles de evidencia (ver docs/ARCHITECTURE.md):
+# - Verificado: código o historial de Git propio.
+# - Declarado: CV previos aprobados por el propietario, sin repositorio disponible
+#   (se redacta como "participación" o "en desarrollo").
+# Lo que no está respaldado no se publica: queda en la lista de pendientes.
+#
+# Contexto de cada skill: professional (usada en un empleo), personal (proyectos propios)
+# o learning (en formación). Solo professional puede figurar como experiencia laboral.
+
+updated: 2026-11
+
+person:
+  name: Juan Pablo Ruiz Marín
+  email: juanpabloruizmarin333@gmail.com
+  # phone: no se publica sin aprobación del propietario.
+  site: https://juanprm03.github.io/developer-cv/
+  location:
+    city: Medellín
+    country: { es: Colombia, en: Colombia }
+    countryCode: CO
+  profiles:
+    - network: GitHub
+      username: Juanprm03
+      url: https://github.com/Juanprm03
+    - network: LinkedIn
+      username: juanpabloruizm03
+      url: https://www.linkedin.com/in/juanpabloruizm03/
+
+site:
+  kicker:
+    es: "Fullstack Software Developer | Backend, Cloud & AI"
+    en: "Fullstack Software Developer | Backend, Cloud & AI"
+  headline:
+    es: Construyo productos web completos, de las APIs y los servicios a la interfaz, la nube y la IA aplicada.
+    en: I build complete web products, from APIs and services to the interface, the cloud and applied AI.
+  intro:
+    es: >-
+      Trabajo con el stack que cada producto necesita —Node.js y NestJS, Laravel, Python, React y Next.js— en
+      servicios que se comunican por APIs, webhooks e integraciones con terceros: pagos, WhatsApp, notificaciones,
+      ticketing y agentes de IA.
+    en: >-
+      I work with the stack each product needs —Node.js and NestJS, Laravel, Python, React and Next.js— on
+      services that talk to each other through APIs, webhooks and third-party integrations: payments, WhatsApp,
+      notifications, ticketing and AI agents.
+  # Declarado por el propietario: empleo verificable desde 2025-04 + proyectos personales.
+  # No es duración de empleo formal (19 meses); solo se muestra en la web, no en los PDF.
+  experience:
+    es: Más de 2 años de experiencia combinada entre trabajo profesional y proyectos personales.
+    en: Over 2 years of combined experience across professional work and personal projects.
+  specializations:
+    - { id: backend, title: { es: Backend y APIs, en: Backend & APIs }, skills: [nodejs, nestjs, laravel, fastapi] }
+    - { id: frontend, title: { es: Frontend web, en: Web frontend }, skills: [react, nextjs, typescript] }
+    - id: services
+      title: { es: Servicios distribuidos, en: Distributed services }
+      skills: [rest-apis, webhooks, redis]
+    - { id: cloud, title: { es: Cloud y contenedores, en: Cloud & containers }, skills: [aws, docker] }
+    - { id: ai, title: { es: IA aplicada, en: Applied AI }, skills: [openai-api, langchain, pgvector] }
+    - id: integrations
+      title: { es: Integraciones, en: Integrations }
+      skills: [whatsapp-cloud-api, slack-api, postman]
+  # Experiencia en cifras: solo indicadores con definición y evidencia (ver docs/ARCHITECTURE.md).
+  figures:
+    - id: combined-experience
+      value: { es: "+2", en: "2+" }
+      label: { es: años de experiencia combinada, en: years of combined experience }
+      note:
+        es: Trabajo profesional desde 2025 y proyectos personales; no equivale a años de empleo formal.
+        en: Professional work since 2025 plus personal projects; not years of formal employment.
+    - id: contributed-apps
+      value: { es: "8", en: "8" }
+      label: { es: aplicaciones y servicios con contribuciones propias, en: applications and services with my own contributions }
+      note:
+        es: Repositorios de C-Pocket con contribuciones propias verificadas en su historial; desarrollados en equipo.
+        en: C-Pocket repositories with my own contributions verified in their history; built as a team.
+    - id: independent-services
+      value: { es: "3", en: "3" }
+      label: { es: servicios desplegables de forma independiente, en: independently deployable services }
+      note:
+        es: Comunicados por APIs y webhooks; contribuí en los tres.
+        en: Communicating through APIs and webhooks; I contributed to all three.
+  domains:
+    - { id: payments, text: { es: Pagos y fintech, en: Payments & fintech } }
+    - id: conversational
+      text: { es: Automatización conversacional (WhatsApp), en: Conversational automation (WhatsApp) }
+    - { id: ai, text: { es: IA aplicada y agentes, en: Applied AI & agents } }
+    - { id: proptech, text: { es: PropTech e integración de datos, en: PropTech & data integration } }
+    - { id: ticketing, text: { es: Venta y validación de tickets, en: Ticket sales & validation } }
+    - { id: internal, text: { es: Herramientas internas y reportes, en: Internal tools & reporting } }
+  approach:
+    title:
+      es: Entender primero, construir con criterio
+      en: Understand first, build with judgment
+    intro:
+      es: >-
+        Antes de escribir código quiero saber qué problema resuelve y para quién. A partir de ahí busco
+        soluciones que el equipo pueda mantener, probar y hacer crecer, con la tecnología que el producto
+        necesita y no con la que más me gusta.
+      en: >-
+        Before writing code I want to know what problem it solves and for whom. From there I look for
+        solutions the team can maintain, test and grow, with the technology the product needs rather
+        than the one I like best.
+  principles:
+    - id: problem-first
+      title: { es: El problema antes que el código, en: The problem before the code }
+      description:
+        es: Me involucro en los requerimientos y en la necesidad del negocio para construir lo que de verdad hace falta, no solo lo que dice un ticket.
+        en: I get involved in requirements and business needs to build what is actually needed, not just what a ticket says.
+      example:
+        es: En C-Pocket trabajé con producto y equipos multidisciplinarios para analizar necesidades y entregar funcionalidades de principio a fin.
+        en: At C-Pocket I worked with product and cross-functional teams to analyze needs and deliver features end to end.
+    - id: architecture
+      title: { es: Diseñar para que el sistema pueda crecer, en: Design so the system can grow }
+      description:
+        es: Pienso en límites claros, contratos entre servicios y código que otra persona pueda entender y cambiar.
+        en: I think about clear boundaries, contracts between services and code someone else can understand and change.
+      example:
+        es: En la plataforma de pagos, los pagos se organizan en casos de uso con un adaptador por proveedor detrás de una interfaz común.
+        en: In the payments platform, payments are organized into use cases with one adapter per provider behind a common interface.
+    - id: quality
+      title: { es: Calidad que se puede comprobar, en: Quality you can verify }
+      description:
+        es: Las pruebas automatizadas y las revisiones de código son parte del trabajo, no un paso opcional al final.
+        en: Automated tests and code reviews are part of the work, not an optional step at the end.
+      example:
+        es: Pruebas con Jest, Vitest y PHPUnit en productos de C-Pocket, y con pytest en mi ERP personal, incluidos permisos, aislamiento de datos y concurrencia.
+        en: Tests with Jest, Vitest and PHPUnit in C-Pocket products, and with pytest in my personal ERP, covering permissions, data isolation and concurrency.
+    - id: production
+      title: { es: Producción observable, en: Observable production }
+      description:
+        es: Quiero saber qué pasa en producción y poder explicarlo, con logs útiles, trazabilidad y cambios que se pueden seguir.
+        en: I want to know what happens in production and be able to explain it, with useful logs, traceability and changes you can follow.
+      example:
+        es: Identificadores de traza en los pagos de la plataforma conversacional, bitácora de auditoría en el validador QR y diagnóstico de incidencias mediante logs.
+        en: Trace ids on the conversational platform's payments, an audit log in the QR validator and log-based incident diagnosis.
+    - id: ai-judgment
+      title: { es: "IA como herramienta, con criterio propio", en: "AI as a tool, with my own judgment" }
+      description:
+        es: Uso IA y automatización para avanzar más rápido, pero reviso, pruebo y decido; la responsabilidad del resultado sigue siendo mía.
+        en: I use AI and automation to move faster, but I review, test and decide; I stay responsible for the result.
+      example:
+        es: Contribuí a integrar agentes de LangChain con herramientas acotadas de la aplicación en la plataforma conversacional y automaticé reportes programados por correo.
+        en: I helped integrate LangChain agents with scoped application tools in the conversational platform and automated scheduled email reports.
+    - id: adaptability
+      title: { es: El stack al servicio del producto, en: The stack serves the product }
+      description:
+        es: Me adapto a la tecnología y al contexto de cada proyecto, y aprendo lo que haga falta para entregarlo bien.
+        en: I adapt to each project's technology and context, and learn whatever it takes to deliver it well.
+      example:
+        es: En C-Pocket trabajé con Node.js y NestJS, Laravel, Python/FastAPI y Next.js según lo que necesitaba cada producto.
+        en: At C-Pocket I worked with Node.js and NestJS, Laravel, Python/FastAPI and Next.js depending on what each product needed.
+
+skillCategories:
+  - { id: backend, name: { es: Backend y APIs, en: Backend & APIs } }
+  - { id: frontend, name: { es: Frontend y web, en: Frontend & web } }
+  - { id: data, name: { es: Bases de datos y ORM, en: Databases & ORM } }
+  - { id: ai, name: { es: IA y agentes, en: AI & agents } }
+  - { id: cloud, name: { es: Cloud e integraciones, en: Cloud & integrations } }
+  - { id: quality, name: { es: Pruebas y calidad, en: Testing & quality } }
+  - { id: tools, name: { es: Herramientas, en: Tools } }
+
+skills:
+  # ── Experiencia profesional (C-Pocket, Konecta) ──────────────────────────
+  - { id: nodejs, name: Node.js, category: backend, context: professional, tags: [node] }
+  - { id: typescript, name: TypeScript, category: backend, context: professional, tags: [node, frontend] }
+  - { id: nestjs, name: NestJS, category: backend, context: professional, tags: [node] }
+  - { id: express, name: Express, category: backend, context: professional, tags: [node] }
+  - { id: php, name: PHP, category: backend, context: professional, tags: [php] }
+  - { id: laravel, name: Laravel, category: backend, context: professional, tags: [php] }
+  - { id: python, name: Python, category: backend, context: professional, tags: [python] }
+  - { id: fastapi, name: FastAPI, category: backend, context: professional, tags: [python] }
+  - { id: rest-apis, name: REST APIs, category: backend, context: professional, tags: [api] }
+  - { id: webhooks, name: Webhooks, category: backend, context: professional, tags: [api] }
+  - { id: javascript, name: JavaScript, category: frontend, context: professional, tags: [frontend] }
+  - { id: react, name: React, category: frontend, context: professional, tags: [frontend] }
+  - { id: nextjs, name: Next.js, category: frontend, context: professional, tags: [frontend] }
+  - { id: inertia, name: Inertia.js, category: frontend, context: professional, tags: [frontend, php] }
+  - { id: tailwind, name: Tailwind CSS, category: frontend, context: professional, tags: [frontend] }
+  - { id: mysql, name: MySQL, category: data, context: professional, tags: [data] }
+  - { id: postgresql, name: PostgreSQL, category: data, context: professional, tags: [data] }
+  - { id: redis, name: Redis, category: data, context: professional, tags: [data] }
+  - { id: pgvector, name: pgvector, category: data, context: professional, tags: [ai, data] }
+  - { id: prisma, name: Prisma ORM, category: data, context: professional, tags: [node] }
+  - { id: sequelize, name: Sequelize, category: data, context: professional, tags: [node] }
+  - { id: openai-api, name: OpenAI API, category: ai, context: professional, tags: [ai] }
+  - { id: langchain, name: LangChain, category: ai, context: professional, tags: [ai] }
+  - { id: mcp, name: Model Context Protocol (MCP), category: ai, context: professional, tags: [ai] }
+  - { id: aws, name: "AWS (ECS, EC2, S3)", category: cloud, context: professional, tags: [cloud] }
+  - { id: docker, name: Docker, category: cloud, context: professional, tags: [cloud] }
+  - { id: whatsapp-cloud-api, name: WhatsApp Cloud API, category: cloud, context: professional, tags: [automation] }
+  - { id: slack-api, name: Slack API, category: cloud, context: professional, tags: [automation] }
+  - { id: jest, name: Jest, category: quality, context: professional, tags: [quality, node] }
+  - { id: vitest, name: Vitest, category: quality, context: professional, tags: [quality, frontend] }
+  - { id: phpunit, name: PHPUnit, category: quality, context: professional, tags: [quality, php] }
+  - { id: zod, name: Zod, category: quality, context: professional, tags: [quality, node] }
+  - { id: openapi, name: Swagger / OpenAPI, category: tools, context: professional, tags: [api] }
+  - { id: git, name: Git, category: tools, context: professional, tags: [tools] }
+  - { id: postman, name: Postman, category: tools, context: professional, tags: [api] }
+  - { id: onescript, name: OneScript, category: tools, context: professional, tags: [automation] }
+  # ── Proyectos personales (ERP modular, developer-cv) ────────────────────────
+  - { id: django, name: Django, category: backend, context: personal, tags: [python] }
+  - { id: drf, name: Django REST Framework, category: backend, context: personal, tags: [python] }
+  - { id: pytest, name: pytest, category: quality, context: personal, tags: [python, quality] }
+  - { id: astro, name: Astro, category: frontend, context: personal, tags: [frontend] }
+  - { id: typst, name: Typst, category: tools, context: personal, tags: [automation] }
+  - { id: github-actions, name: GitHub Actions, category: cloud, context: personal, tags: [automation] }
+  # ── En formación ─────────────────────────────────────────────────────────
+  # Java y Spring Boot: en formación, sin repositorios que demuestren su uso.
+  - { id: java, name: Java, category: backend, context: learning, tags: [java] }
+  - { id: spring-boot, name: Spring Boot, category: backend, context: learning, tags: [java] }
+  # Práctica introductoria de curso.
+  - { id: angular, name: Angular, category: frontend, context: learning, tags: [frontend] }
+  # Curso de Platzi; sin uso en proyectos. Se muestra en conocimientos complementarios, no como certificación.
+  - { id: mongodb, name: MongoDB, category: data, context: learning, tags: [data] }
+
+competencies:
+  - id: fullstack-web
+    text: { es: Aplicaciones web fullstack, en: Fullstack web applications }
+    tags: [fullstack, frontend, backend]
+  - id: apis-integrations
+    text: { es: "APIs REST, webhooks e integraciones", en: "REST APIs, webhooks and integrations" }
+    tags: [api, backend, node, python, fullstack, php]
+  - id: node-backend
+    text: { es: "Backend con Node.js, NestJS y TypeScript", en: "Backend with Node.js, NestJS and TypeScript" }
+    tags: [node, backend, fullstack]
+  - id: php-backend
+    text: { es: Backend con PHP y Laravel, en: Backend with PHP and Laravel }
+    tags: [php, backend, fullstack]
+  - id: python-backend
+    text: { es: Backend con Python y FastAPI, en: Backend with Python and FastAPI }
+    tags: [python, backend, ai]
+  - id: web-react
+    text: { es: Frontend con React y Next.js, en: Frontend with React and Next.js }
+    tags: [frontend, fullstack]
+  - id: payments
+    text: { es: Integraciones de pagos (PSE y tarjeta), en: Payment integrations (PSE and card) }
+    tags: [payments, node, backend]
+  - id: applied-ai
+    text:
+      es: "IA aplicada: OpenAI, LangChain y búsqueda semántica"
+      en: "Applied AI: OpenAI, LangChain and semantic search"
+    tags: [ai]
+  - id: mcp
+    text: { es: Integración de Claude mediante MCP (en desarrollo), en: Claude integration via MCP (in development) }
+    tags: [ai]
+  - id: whatsapp
+    text: { es: Automatización con WhatsApp Cloud API, en: Automation with WhatsApp Cloud API }
+    tags: [automation, ai, node]
+  - id: notifications
+    text: { es: "Notificaciones: correo, Slack y WhatsApp", en: "Notifications: email, Slack and WhatsApp" }
+    tags: [automation, node, backend]
+  - id: sql-performance
+    text: { es: Optimización SQL y transacciones, en: SQL optimization and transactions }
+    tags: [data, backend]
+  - id: aws
+    text: { es: Despliegue en AWS con Docker, en: AWS deployment with Docker }
+    tags: [cloud, backend]
+  - id: testing
+    text: { es: Pruebas automatizadas y funcionales, en: Automated and functional testing }
+    tags: [quality]
+
+work:
+  - id: c-pocket
+    company: C-Pocket (Capital Pocket)
+    position: { es: Backend Developer, en: Backend Developer }
+    # Inicio exacto en las fuentes: 28 de octubre de 2025. Fin: octubre de 2026 (confirmado).
+    startDate: 2025-10
+    endDate: 2026-10
+    summary:
+      es: "Alcance fullstack (backend, frontend, integraciones, cloud e IA) en un ecosistema de productos SaaS de pagos, automatización conversacional, PropTech, ticketing y herramientas internas."
+      en: "Fullstack scope (backend, frontend, integrations, cloud and AI) across an ecosystem of SaaS products for payments, conversational automation, PropTech, ticketing and internal tools."
+    technologies:
+      [nodejs, typescript, nestjs, express, php, laravel, python, fastapi, rest-apis, webhooks,
+       javascript, react, nextjs, inertia, tailwind, mysql, postgresql, redis, pgvector, prisma,
+       sequelize, openai-api, langchain, mcp, whatsapp-cloud-api, slack-api, aws, docker,
+       jest, vitest, phpunit, zod, openapi, git, postman]
+    highlights:
+      - id: c-pocket-ecosystem
+        tags: [fullstack, backend, node, php, python, frontend]
+        text:
+          es: Desarrollo y mantenimiento de servicios backend y aplicaciones web para varios productos SaaS con **Node.js, NestJS, Express, TypeScript, PHP/Laravel y Python/FastAPI**.
+          en: Built and maintained backend services and web applications for several SaaS products with **Node.js, NestJS, Express, TypeScript, PHP/Laravel and Python/FastAPI**.
+      - id: c-pocket-payments
+        project: payments-platform
+        tags: [payments, node, backend, api, fullstack]
+        text:
+          es: "Plataforma de pagos (**NestJS**): pagos con tarjeta y enlaces de pago, claves de idempotencia, consulta de estado, notificaciones por webhook y autenticación por API key con guards."
+          en: "Payments platform (**NestJS**): card payments and payment links, idempotency keys, status polling, webhook notifications and API-key authentication with guards."
+      - id: c-pocket-whatsapp
+        project: conversational-platform
+        tags: [node, automation, backend, ai]
+        text:
+          es: Flujos conversacionales de WhatsApp en la plataforma de automatización (**Node.js, Express**) para registro de usuarios, recargas y compra de pines, con sesiones, validaciones y reportes de ventas con permisos.
+          en: WhatsApp conversational flows in the automation platform (**Node.js, Express**) for user registration, top-ups and PIN purchases, with sessions, validation and permission-based sales reports.
+      - id: c-pocket-conversational-ai
+        project: conversational-platform
+        tags: [ai, node, automation]
+        text:
+          es: Integración de **OpenAI API** en la plataforma conversacional para conversaciones y automatización en WhatsApp mediante agentes de **LangChain** y herramientas de la aplicación.
+          en: Contributed to **OpenAI API** integration in the conversational platform for WhatsApp conversations and automation using **LangChain** agents and application tools.
+      - id: c-pocket-proptech
+        project: proptech-platform
+        tags: [fullstack, frontend, php, backend, automation]
+        text:
+          es: "Plataforma PropTech (**Laravel, React, Inertia**): gestión y búsqueda de propiedades, e integración con una plataforma externa de listados para importar, publicar y sincronizar propiedades con jobs y colas."
+          en: "PropTech platform (**Laravel, React, Inertia**): property management and search, plus integration with an external listings platform to import, publish and sync listings with jobs and queues."
+      - id: c-pocket-ticketing
+        project: ticketing-ecosystem
+        tags: [fullstack, frontend, node, backend]
+        text:
+          es: "Ecosistema de ticketing (**Node.js, Next.js, React**): API de tickets, operadores, productos, fechas y reportes; panel administrativo con calendario y reportes en Excel; validador QR de taquilla con bitácora de auditoría."
+          en: "Ticketing ecosystem (**Node.js, Next.js, React**): API for tickets, operators, products, dates and reports; admin panel with a calendar and Excel reports; box-office QR validator with an audit log."
+      - id: c-pocket-notifications
+        project: notification-service
+        tags: [backend, node, automation]
+        text:
+          es: Servicio de notificaciones en **NestJS** con correo (con reintentos), Slack y WhatsApp, generación de tickets PDF con QR y reportes programados por correo.
+          en: Notification service in **NestJS** with email (with retries), Slack and WhatsApp, PDF tickets with QR codes and scheduled email reports.
+      - id: c-pocket-operations
+        project: operations-platform
+        tags: [fullstack, frontend, php]
+        text:
+          es: "Sistema de gestión y operaciones (**Laravel, React**): tablero de tareas en lista y Kanban con permisos de equipo, vistas guardadas y filtros, y panel de ventas con alertas."
+          en: "Business operations system (**Laravel, React**): task board with list and Kanban views, team permissions, saved views and filters, plus a sales dashboard with alerts."
+      - id: c-pocket-ai-backend
+        project: ai-backend
+        tags: [ai, python, backend]
+        text:
+          es: Participación en un backend multi-tenant con **Python y FastAPI** (desarrollo detenido) para agentes de IA, procesamiento de información y búsqueda semántica con **PostgreSQL y pgvector**.
+          en: Participated in a multi-tenant backend with **Python and FastAPI** (development halted) for AI agents, information processing and semantic search with **PostgreSQL and pgvector**.
+      - id: c-pocket-mcp
+        project: operations-platform
+        tags: [ai]
+        text:
+          es: Trabajo en una integración en desarrollo con **Model Context Protocol (MCP)** para conectar Claude con herramientas y funcionalidades del sistema de operaciones.
+          en: Worked on an in-progress **Model Context Protocol (MCP)** integration to connect Claude with the operations system's tools and features.
+      # REVISAR: los CV previos declaran una reducción de ~53 s a <3 s en algunos procesos; sin
+      # evidencia reproducible, no se publica (ver informe de métricas).
+      - id: c-pocket-sql
+        tags: [data, backend, python, node, fullstack]
+        text:
+          es: Optimización de consultas SQL y servicios backend, con manejo de transacciones e idempotencia.
+          en: Optimized SQL queries and backend services, with transaction handling and idempotency.
+      - id: c-pocket-aws
+        tags: [cloud, backend, fullstack]
+        text:
+          es: Despliegue y mantenimiento de servicios en **AWS (ECS, EC2 y S3)** mediante Docker; diagnóstico de incidencias mediante logs.
+          en: Deployed and maintained services on **AWS (ECS, EC2 and S3)** with Docker; diagnosed issues through logs.
+      - id: c-pocket-quality
+        tags: [quality, backend, fullstack, node, php]
+        text:
+          es: Pruebas automatizadas con **Jest, Vitest y PHPUnit**, pruebas funcionales, validación de integraciones y resolución de incidencias en producción.
+          en: Automated tests with **Jest, Vitest and PHPUnit**, functional testing, integration validation and production incident resolution.
+
+  - id: konecta
+    company: Konecta
+    position:
+      es: Practicante de Desarrollo de Software / QA
+      en: Software Development / QA Intern
+    startDate: 2025-04
+    endDate: 2025-10
+    technologies: [onescript]
+    highlights:
+      - id: konecta-qa
+        tags: [quality]
+        text:
+          es: Apoyo en procesos de QA, validación funcional y gestión documental en entornos corporativos, junto a equipos de calidad y soporte técnico.
+          en: Supported QA, functional validation and documentation in corporate environments alongside quality and support teams.
+      - id: konecta-automation
+        tags: [automation, quality]
+        text:
+          es: Automatización de procesos internos con **OneScript**.
+          en: Automated internal processes using **OneScript**.
+      - id: konecta-incidents
+        tags: [quality]
+        text:
+          es: Análisis de incidencias y validación de flujos para la mejora de procesos internos.
+          en: Analyzed incidents and validated workflows to improve internal processes.
+
+projects:
+  # Proyectos de C-Pocket: repositorios privados → sin enlaces, confidenciales.
+  - id: conversational-platform
+    name:
+      es: Plataforma de automatización conversacional y servicios digitales
+      en: Conversational automation & digital services platform
+    description:
+      es: Plataforma conversacional en WhatsApp con flujos de registro, recargas, pines y pagos, conversaciones con OpenAI mediante agentes de LangChain y reportes de ventas.
+      en: Conversational WhatsApp platform with registration, top-up, PIN and payment flows, OpenAI conversations through LangChain agents and sales reporting.
+    context: professional
+    work: c-pocket
+    confidential: true
+    caseStudy: true
+    technologies: [nodejs, express, typescript, mysql, sequelize, redis, whatsapp-cloud-api, openai-api, langchain, jest]
+    tags: [ai, node, backend, automation]
+
+  - id: payments-platform
+    name: { es: Plataforma de pagos e integraciones financieras, en: Payments & financial integrations platform }
+    description:
+      es: Servicios de pago modulares con pagos con tarjeta y enlaces de pago, idempotencia, consulta de estado, notificaciones por webhook y autenticación por API key con guards.
+      en: Modular payment services with card payments and payment links, idempotency, status polling, webhook notifications and API-key authentication with guards.
+    context: professional
+    work: c-pocket
+    confidential: true
+    caseStudy: true
+    technologies: [nestjs, typescript, prisma, mysql, zod, jest]
+    tags: [backend, node, payments, api]
+
+  - id: ticketing-ecosystem
+    name: { es: Ecosistema de ticketing y gestión operativa, en: Ticketing & operations management ecosystem }
+    description:
+      es: Panel administrativo, validador QR de taquilla y web de compra para la venta y validación de tickets, con reportes de ventas, alertas y entregas por correo.
+      en: Admin panel, box-office QR validator and purchase site for ticket sales and validation, with sales reports, alerts and email deliveries.
+    context: professional
+    work: c-pocket
+    confidential: true
+    caseStudy: true
+    technologies: [nextjs, react, typescript, tailwind, mysql, zod, vitest, nestjs]
+    tags: [fullstack, frontend, node]
+
+  - id: proptech-platform
+    name: { es: Plataforma PropTech de gestión inmobiliaria, en: PropTech real-estate management platform }
+    description:
+      es: Plataforma inmobiliaria con gestión y búsqueda de propiedades, integración con una plataforma externa de listados, y automatización por WhatsApp.
+      en: Real-estate platform with property management and search, integration with an external listings platform, and WhatsApp automation.
+    context: professional
+    work: c-pocket
+    confidential: true
+    caseStudy: true
+    technologies: [php, laravel, react, inertia, typescript, mysql, rest-apis]
+    tags: [fullstack, frontend, backend, php]
+
+  - id: notification-service
+    name: { es: Servicio de notificaciones y procesamiento de eventos, en: Notification & event processing service }
+    description:
+      es: Servicio de notificaciones por correo, Slack y WhatsApp con generación de tickets PDF con QR, reportes programados y seguimiento del estado de cada envío.
+      en: Notification service for email, Slack and WhatsApp with PDF tickets with QR codes, scheduled reports and per-message status tracking.
+    context: professional
+    work: c-pocket
+    confidential: true
+    caseStudy: true
+    technologies: [nestjs, typescript, prisma, whatsapp-cloud-api, slack-api, openapi, jest]
+    tags: [backend, node, automation]
+
+  - id: operations-platform
+    name: { es: Sistema de gestión empresarial y operaciones, en: Business management & operations system }
+    description:
+      es: Aplicación interna con tablero de tareas (lista y Kanban), permisos de equipo, vistas guardadas y paneles de ventas; incluye una integración de Claude mediante MCP en desarrollo.
+      en: Internal application with a task board (list and Kanban), team permissions, saved views and sales dashboards; includes an in-progress Claude integration via MCP.
+    context: professional
+    work: c-pocket
+    confidential: true
+    caseStudy: true
+    technologies: [laravel, php, react, typescript, phpunit]
+    tags: [fullstack, frontend, php, ai]
+
+  - id: ai-backend
+    # Evidencia: confirmación del propietario (2026-11-16). El repositorio no estuvo disponible, así
+    # que "multi-tenant" y el alcance funcional no se verificaron en código. Desarrollo detenido:
+    # nunca presentarlo como producto terminado ni desplegado en producción.
+    name: { es: Backend multi-tenant con capacidades de IA, en: Multi-tenant backend with AI capabilities }
+    description:
+      es: Participación en servicios backend para agentes de IA, procesamiento de información, almacenamiento y recuperación mediante búsqueda semántica.
+      en: Contributed to backend services for AI agents, information processing, storage and retrieval through semantic search.
+    context: professional
+    work: c-pocket
+    status: stopped
+    confidential: true
+    caseStudy: true
+    technologies: [python, fastapi, postgresql, redis, pgvector]
+    tags: [ai, python, backend]
+
+  # Proyectos personales (repositorios públicos).
+  - id: modular-erp
+    name: { es: ERP modular — proyecto personal, en: Modular ERP — personal project }
+    description:
+      es: ERP multiempresa en desarrollo con módulos administrativos, modelos relacionales, transacciones y permisos por empresa, con pruebas automatizadas de servicios, API y aislamiento de datos.
+      en: Multi-company ERP in development with administrative modules, relational models, transactions and company-level permissions, plus automated service, API and data-isolation tests.
+    context: personal
+    status: development
+    role: { es: Autor, en: Author }
+    url: https://github.com/Juanprm03/nexo-erp
+    caseStudy: true
+    technologies: [python, django, drf, postgresql, docker, pytest]
+    tags: [python, backend, data]
+    highlights:
+      - id: erp-invoicing
+        tags: [python, backend, data]
+        text:
+          es: Emisión de facturas con transaction.atomic y select_for_update para bloquear la factura y su secuencia de numeración por empresa.
+          en: Invoice issuing with transaction.atomic and select_for_update to lock the invoice and its per-company numbering sequence.
+
+  - id: developer-cv
+    name: { es: developer-cv — Portafolio y CV como código, en: developer-cv — Portfolio & CV as Code }
+    description:
+      es: Un perfil maestro en YAML validado con Zod genera este sitio bilingüe con Astro y el CV en PDF con Typst, publicados con GitHub Actions.
+      en: A Zod-validated YAML master profile generates this bilingual Astro site and the Typst PDF resume, published with GitHub Actions.
+    context: personal
+    status: development
+    role: { es: Autor (sobre inehosa1/cv), en: Author (built on inehosa1/cv) }
+    url: https://github.com/Juanprm03/developer-cv
+    caseStudy: true
+    technologies: [typescript, astro, tailwind, typst, zod, vitest, github-actions]
+    tags: [fullstack, frontend, automation]
+    # Cifras comprobables en este repositorio (data/variants y salida de `pnpm build`).
+    metrics:
+      - value: { es: "1", en: "1" }
+        label: { es: perfil maestro como fuente única, en: master profile as single source }
+      - value: { es: "2", en: "2" }
+        label: { es: idiomas con paridad validada, en: languages with validated parity }
+
+# Áreas técnicas de la web: cada una cita su evidencia (empleos y proyectos).
+capabilities:
+  - id: backend
+    title: { es: Backend, en: Backend }
+    summary:
+      es: APIs y servicios en Node.js, PHP y Python, con validación, autenticación por API key y documentación OpenAPI.
+      en: APIs and services in Node.js, PHP and Python, with validation, API-key authentication and OpenAPI docs.
+    skills: [nodejs, nestjs, express, typescript, php, laravel, python, fastapi, django, drf]
+    work: [c-pocket]
+    projects: [payments-platform, conversational-platform, notification-service, proptech-platform, modular-erp]
+  - id: frontend
+    title: { es: Frontend, en: Frontend }
+    summary:
+      es: Paneles administrativos, validadores y herramientas internas, y sitios estáticos accesibles.
+      en: Admin panels, validators and internal tools, plus accessible static sites.
+    skills: [react, nextjs, inertia, typescript, javascript, tailwind, astro]
+    work: [c-pocket]
+    projects: [ticketing-ecosystem, proptech-platform, operations-platform, developer-cv]
+  - id: databases
+    title: { es: Bases de datos, en: Databases }
+    summary:
+      es: Modelado y consultas en MySQL y PostgreSQL, transacciones e idempotencia, Redis y búsqueda semántica con pgvector.
+      en: Modeling and queries in MySQL and PostgreSQL, transactions and idempotency, Redis and semantic search with pgvector.
+    skills: [mysql, postgresql, redis, pgvector, prisma, sequelize]
+    work: [c-pocket]
+    projects: [payments-platform, conversational-platform, ai-backend, modular-erp]
+  - id: cloud-devops
+    title: { es: Cloud y DevOps, en: Cloud & DevOps }
+    summary:
+      es: Servicios en contenedores desplegados en AWS; CI/CD con GitHub Actions en proyectos personales.
+      en: Containerized services deployed on AWS; CI/CD with GitHub Actions in personal projects.
+    skills: [aws, docker, github-actions]
+    work: [c-pocket]
+    projects: [developer-cv]
+  - id: architecture
+    title: { es: Arquitectura y servicios distribuidos, en: Architecture & distributed services }
+    summary:
+      es: Servicios independientes que se comunican por APIs REST, webhooks y claves de servicio; casos de uso con adaptadores y un monolito modular con aislamiento por empresa.
+      en: Independent services that talk through REST APIs, webhooks and service keys; use cases with adapters and a modular monolith with company isolation.
+    skills: [rest-apis, webhooks, nestjs, laravel, docker]
+    work: [c-pocket]
+    projects: [payments-platform, notification-service, conversational-platform, modular-erp]
+  - id: ai
+    title: { es: Inteligencia artificial, en: Artificial intelligence }
+    summary:
+      es: Agentes de LangChain con herramientas de la aplicación, OpenAI, búsqueda semántica y una integración MCP en desarrollo.
+      en: LangChain agents with application tools, OpenAI, semantic search and an in-progress MCP integration.
+    skills: [openai-api, langchain, pgvector]
+    work: [c-pocket]
+    projects: [conversational-platform, ai-backend, operations-platform]
+  - id: automation
+    title: { es: Automatización, en: Automation }
+    summary:
+      es: Reportes programados por correo, sincronizaciones con jobs y colas y automatización de procesos internos.
+      en: Scheduled email reports, syncs with jobs and queues, and automation of internal processes.
+    skills: [laravel, nestjs, onescript, github-actions, typst]
+    work: [c-pocket, konecta]
+    projects: [notification-service, proptech-platform, developer-cv]
+  - id: integrations
+    title: { es: Integraciones, en: Integrations }
+    summary:
+      es: Pagos (PSE y tarjeta), WhatsApp, Slack, correo y datos de una plataforma externa de listados inmobiliarios.
+      en: Payments (PSE and card), WhatsApp, Slack, email and data from an external real-estate listings platform.
+    skills: [whatsapp-cloud-api, slack-api, webhooks, rest-apis]
+    work: [c-pocket]
+    projects: [payments-platform, conversational-platform, notification-service, proptech-platform]
+  - id: quality-tools
+    title: { es: Herramientas y calidad, en: Tools & quality }
+    summary:
+      es: Pruebas automatizadas y funcionales, validación de esquemas, documentación de APIs y control de versiones.
+      en: Automated and functional tests, schema validation, API documentation and version control.
+    skills: [jest, vitest, phpunit, pytest, zod, openapi, git, postman]
+    work: [c-pocket, konecta]
+    projects: [ticketing-ecosystem, operations-platform, modular-erp]
+
+education:
+  - id: sena
+    institution: SENA
+    studyType: { es: Tecnólogo, en: Technologist }
+    area: { es: Análisis y Desarrollo de Software (ADSO), en: Software Analysis and Development (ADSO) }
+    startDate: "2023"
+    endDate: "2025"
+
+certificates:
+  - { id: platzi-python, name: { es: Python, en: Python }, issuer: Platzi, skills: [python] }
+  - { id: platzi-nodejs, name: { es: Node.js, en: Node.js }, issuer: Platzi, skills: [nodejs] }
+  - { id: platzi-postgresql, name: { es: PostgreSQL, en: PostgreSQL }, issuer: Platzi, skills: [postgresql] }
+  - { id: platzi-react, name: { es: React.js, en: React.js }, issuer: Platzi, skills: [react] }
+  - { id: platzi-nextjs, name: { es: Next.js, en: Next.js }, issuer: Platzi, skills: [nextjs] }
+  - { id: platzi-git, name: { es: Git y GitHub, en: Git and GitHub }, issuer: Platzi, skills: [git] }
+
+languages:
+  - id: spanish
+    language: { es: Español, en: Spanish }
+    fluency: { es: Nativo, en: Native }
+  - id: english
+    language: { es: Inglés, en: English }
+    fluency: { es: B1, en: B1 }

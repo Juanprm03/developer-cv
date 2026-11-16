@@ -1,0 +1,35 @@
+---
+import { formatDate } from '../lib/format.ts';
+import { ui } from '../lib/i18n.ts';
+import type { CV } from '../lib/schema.ts';
+
+interface Props {
+  cv: CV;
+}
+const { cv } = Astro.props;
+const lang = cv.meta.lang;
+const t = ui[lang];
+const year = cv.meta.lastModified.slice(0, 4);
+---
+
+<footer class="no-print mt-24 border-t border-rule">
+  <div
+    class="container-page flex flex-col gap-3 py-8 text-xs text-muted sm:flex-row sm:items-center sm:justify-between"
+  >
+    <p>© {year} {cv.basics.name}</p>
+    <p class="flex flex-wrap gap-x-2 gap-y-1">
+      <span>
+        {t.updated} <time datetime={cv.meta.lastModified}>{formatDate(cv.meta.lastModified, cv.meta.labels)}</time>
+      </span>
+      <span aria-hidden="true">·</span>
+      <a href="https://github.com/Juanprm03/developer-cv" class="underline underline-offset-4 hover:text-ink">
+        {t.sourceCode}
+      </a>
+    </p>
+    <p>
+      {t.credit}
+      <a href="https://github.com/inehosa1/cv" class="underline underline-offset-4 hover:text-ink">inehosa1/cv</a>,
+      {t.creditWith}.
+    </p>
+  </div>
+</footer>
