@@ -6,6 +6,7 @@ es:
   competencies: Competencias clave
   work: Experiencia laboral
   projects: Proyectos
+  featuredProjects: Proyectos destacados
   skills: Habilidades técnicas
   education: Formación académica
   certificates: Certificaciones
@@ -25,6 +26,7 @@ es:
   references: Referencias
   referencesNote: Referencias profesionales disponibles a solicitud.
   personalProject: Proyecto personal
+  professionalProject: Proyecto profesional
   inDevelopment: En desarrollo
   devStopped: Desarrollo detenido
   months: [ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
@@ -34,6 +36,7 @@ en:
   competencies: Core competencies
   work: Experience
   projects: Projects
+  featuredProjects: Featured projects
   skills: Technical skills
   education: Education
   certificates: Certifications
@@ -53,6 +56,7 @@ en:
   references: References
   referencesNote: Professional references available upon request.
   personalProject: Personal project
+  professionalProject: Professional project
   inDevelopment: In development
   devStopped: Development halted
   months: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]

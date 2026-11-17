@@ -17,6 +17,9 @@
         "projects": {
           "type": "string"
         },
+        "featuredProjects": {
+          "type": "string"
+        },
         "skills": {
           "type": "string"
         },
@@ -74,6 +77,9 @@
         "personalProject": {
           "type": "string"
         },
+        "professionalProject": {
+          "type": "string"
+        },
         "inDevelopment": {
           "type": "string"
         },
@@ -94,6 +100,7 @@
         "competencies",
         "work",
         "projects",
+        "featuredProjects",
         "skills",
         "education",
         "certificates",
@@ -113,6 +120,7 @@
         "references",
         "referencesNote",
         "personalProject",
+        "professionalProject",
         "inDevelopment",
         "devStopped",
         "months"
@@ -134,6 +142,9 @@
         "projects": {
           "type": "string"
         },
+        "featuredProjects": {
+          "type": "string"
+        },
         "skills": {
           "type": "string"
         },
@@ -191,6 +202,9 @@
         "personalProject": {
           "type": "string"
         },
+        "professionalProject": {
+          "type": "string"
+        },
         "inDevelopment": {
           "type": "string"
         },
@@ -211,6 +225,7 @@
         "competencies",
         "work",
         "projects",
+        "featuredProjects",
         "skills",
         "education",
         "certificates",
@@ -230,6 +245,7 @@
         "references",
         "referencesNote",
         "personalProject",
+        "professionalProject",
         "inDevelopment",
         "devStopped",
         "months"

@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 import { parse } from 'yaml';
 import { z } from 'zod';
 import { type Profile, profileSchema } from './profile-schema.ts';
-import { type LabelsByLang, resolveCV } from './resolve.ts';
+import { type LabelsByLang, resolveCV, type Target } from './resolve.ts';
 import { type CV, cvSchema, type Lang } from './schema.ts';
 import { type Variant, variantSchema } from './variant-schema.ts';
 
@@ -69,11 +69,14 @@ export const defaultVariant = (): Variant => {
   return v;
 };
 
-/** CV resuelto de un idioma. Sin variante: la variante por defecto (la de la web). */
-export function loadCV(lang: Lang, variantId?: string): CV {
-  return memo(`cv:${variantId ?? 'default'}:${lang}`, () => {
+/**
+ * CV resuelto de un idioma. Sin variante: la variante por defecto (la de la web).
+ * `target: 'pdf'` aplica los ajustes `pdf` de la variante (solo los scripts del PDF).
+ */
+export function loadCV(lang: Lang, variantId?: string, target: Target = 'web'): CV {
+  return memo(`cv:${variantId ?? 'default'}:${lang}:${target}`, () => {
     const variant = variantId ? loadVariants().find((v) => v.id === variantId) : defaultVariant();
     if (!variant) throw new Error(`Variante desconocida "${variantId}"`);
-    return resolveCV({ profile: loadProfile(), variant, labels: loadLabels(), lang });
+    return resolveCV({ profile: loadProfile(), variant, labels: loadLabels(), lang, target });
   });
 }

@@ -10,6 +10,17 @@ import { z } from 'zod';
 import { idSchema, localized } from './profile-schema.ts';
 import { richText } from './schema.ts';
 
+/** Grupos de logros por empleo (id del empleo → grupos con título e ids de logros). */
+const groupsSchema = z.record(
+  idSchema,
+  z.array(
+    z.strictObject({
+      title: localized(z.string().min(1)),
+      highlights: z.array(idSchema).min(1),
+    }),
+  ),
+);
+
 export const variantSchema = z.strictObject({
   id: idSchema,
   /** Nombre corto para la lista de descargas (p. ej. "Backend Python"). */
@@ -49,17 +60,7 @@ export const variantSchema = z.strictObject({
    * Agrupación de logros por empleo (id del empleo → grupos con título e ids de logros).
    * Solo cambia la presentación: los textos siguen siendo literales del perfil.
    */
-  groups: z
-    .record(
-      idSchema,
-      z.array(
-        z.strictObject({
-          title: localized(z.string().min(1)),
-          highlights: z.array(idSchema).min(1),
-        }),
-      ),
-    )
-    .default({}),
+  groups: groupsSchema.default({}),
   /** Añade al final del CV "Referencias profesionales disponibles a solicitud" (sin datos de terceros). */
   referencesNote: z.boolean().default(false),
   /** Mostrar la lista de tecnologías de cada empleo (el CV general la omite: ya está en habilidades). */
@@ -86,6 +87,19 @@ export const variantSchema = z.strictObject({
    * `learning`) que se listan en su propia sección rotulada.
    */
   knowledge: z.array(idSchema).default([]),
+
+  /**
+   * Ajustes SOLO del CV en PDF (la web sigue usando la selección de arriba): otra selección de
+   * proyectos y de grupos de logros, y `featuredProjects` para la sección «Proyectos destacados»,
+   * que usa la presentación `cv` de cada proyecto del perfil.
+   */
+  pdf: z
+    .strictObject({
+      projects: z.array(idSchema).optional(),
+      groups: groupsSchema.optional(),
+      featuredProjects: z.boolean().default(false),
+    })
+    .optional(),
 
   /** Límite de páginas del PDF (lo comprueba build-pdf). */
   maxPages: z.union([z.literal(1), z.literal(2)]).default(2),

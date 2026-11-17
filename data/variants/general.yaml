@@ -56,6 +56,19 @@ skills:
   exclude: [mcp]
 # Los productos de C-Pocket ya se describen en la experiencia; aquí, evidencia adicional.
 projects: [modular-erp, developer-cv]
+# Solo el CV en PDF: proyectos destacados (dos profesionales y uno personal) y C-Pocket condensado
+# para no repetir en la experiencia lo que detallan los proyectos. La web usa la selección de arriba.
+pdf:
+  featuredProjects: true
+  projects: [conversational-platform, payments-platform, modular-erp]
+  groups:
+    c-pocket:
+      - title: { es: "Backend, APIs e integraciones", en: "Backend, APIs & integrations" }
+        highlights: [c-pocket-ecosystem, c-pocket-notifications, c-pocket-sql]
+      - title: { es: Aplicaciones web fullstack, en: Fullstack web applications }
+        highlights: [c-pocket-ticketing, c-pocket-proptech, c-pocket-operations]
+      - title: { es: "IA, cloud y calidad", en: "AI, cloud & quality" }
+        highlights: [c-pocket-ai-backend, c-pocket-aws, c-pocket-quality]
 # Conocimientos complementarios (contexto learning): sección propia, nunca experiencia.
 knowledge: [java, spring-boot, angular, mongodb]
 maxPages: 2

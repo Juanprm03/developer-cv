@@ -67,7 +67,7 @@ function expectedTexts(cv: CV): string[] {
     L.skills,
     L.education,
     L.languages,
-    ...(cv.projects.length ? [L.projects] : []),
+    ...(cv.projects.length ? [cv.meta.featuredProjects ? L.featuredProjects : L.projects] : []),
     ...(cv.meta.referencesNote ? [L.references] : []),
     ...(cv.meta.referencesNote && !refs.length ? [L.referencesNote] : []),
     ...refs.flatMap((r) => [r.name, r.position, r.company, r.phone, r.email]),
@@ -92,7 +92,7 @@ function expectedLinks(cv: CV): string[] {
 let checked = 0;
 const variants = loadVariants();
 for (const t of pdfTargets(variants, LANGS, loadProfile().person.name)) {
-  const cv = loadCV(t.lang, t.variant);
+  const cv = loadCV(t.lang, t.variant, 'pdf');
   const file = t.file;
   const where = file;
   let raw: Buffer;

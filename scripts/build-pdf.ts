@@ -41,7 +41,7 @@ for (const t of pdfTargets(variants, LANGS, loadProfile().person.name)) {
   if (only.length && !only.includes(t.variant)) continue;
   const variant = variants.find((v) => v.id === t.variant);
   if (!variant) continue;
-  const cv = loadCV(t.lang, t.variant);
+  const cv = loadCV(t.lang, t.variant, 'pdf');
   const data = `${CACHE}/${t.variant}.${t.lang}.json`;
   // Solo el PDF las recibe (la web nunca): se añaden al JSON de Typst, fuera de cvSchema.
   const pdfData = cv.meta.referencesNote

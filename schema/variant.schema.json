@@ -271,6 +271,69 @@
         "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
       }
     },
+    "pdf": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          }
+        },
+        "groups": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "object",
+                  "properties": {
+                    "es": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "es",
+                    "en"
+                  ],
+                  "additionalProperties": false
+                },
+                "highlights": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "highlights"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "featuredProjects": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
     "maxPages": {
       "default": 2,
       "anyOf": [

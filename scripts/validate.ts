@@ -49,11 +49,15 @@ if (profile) {
   for (const variant of variants) {
     errors.push(...validateVariant(profile, variant), ...checkVariantFreeText(profile, variant));
     for (const lang of LANGS) {
-      const cv = attempt(() => loadCV(lang, variant.id));
-      if (cv && release)
-        errors.push(
-          ...findPlaceholders(cv).map((p) => `[release] ${variant.id}.${lang} contiene ${p}`),
-        );
+      for (const target of ['web', 'pdf'] as const) {
+        const cv = attempt(() => loadCV(lang, variant.id, target));
+        if (cv && release)
+          errors.push(
+            ...findPlaceholders(cv).map(
+              (p) => `[release] ${variant.id}.${lang} (${target}) contiene ${p}`,
+            ),
+          );
+      }
     }
   }
 }

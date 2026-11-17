@@ -82,6 +82,15 @@ export function validateVariant(profile: Profile, variant: Variant): string[] {
       if (!own.has(id)) at(`groups.${workId}: "${id}" no es un logro de ese empleo`);
     if (new Set(used).size !== used.length) at(`groups.${workId}: logros repetidos entre grupos`);
   }
+  for (const id of variant.pdf?.projects ?? [])
+    if (!projects.has(id)) at(`pdf.projects: proyecto desconocido "${id}"`);
+  for (const p of profile.projects) {
+    const job = p.work ? profile.work.find((w) => w.id === p.work) : undefined;
+    const allowed = new Set([...p.technologies, ...(job?.technologies ?? [])]);
+    for (const id of p.cv?.technologies ?? [])
+      if (!allowed.has(id))
+        at(`proyecto ${p.id}: tecnología "${id}" ajena al proyecto o su empleo`);
+  }
   for (const list of ['competencies', 'projects', 'knowledge'] as const) {
     const ids = variant[list];
     if (new Set(ids).size !== ids.length) at(`${list} contiene ids repetidos`);
@@ -184,6 +193,7 @@ export function renderCV(
   variant: Variant,
   labels: LabelsByLang,
   lang: Lang,
+  target: Target = 'web',
 ): CV {
   const skill = (id: string) =>
     must(
@@ -191,6 +201,7 @@ export function renderCV(
       `skill ${id}`,
     );
   const { person, site } = profile;
+  const featured = target === 'pdf' && variant.pdf?.featuredProjects === true;
 
   const work = selection.work.map((sel) => {
     const w = must(
@@ -221,19 +232,23 @@ export function renderCV(
       profile.projects.find((x) => x.id === sel.id),
       `project ${sel.id}`,
     );
+    // «Proyectos destacados» del PDF: presentación `cv` del perfil (si existe).
+    const view = featured ? p.cv : undefined;
     return {
       id: p.id,
-      name: p.name[lang],
-      description: p.description[lang],
+      name: (view?.name ?? p.name)[lang],
+      description: (view?.description ?? p.description)[lang],
       ...(p.url && { url: p.url }),
-      highlights: sel.highlights.map(
-        (id) =>
-          must(
-            p.highlights.find((h) => h.id === id),
-            `highlight ${id}`,
-          ).text[lang],
-      ),
-      technologies: p.technologies.map((id) => skill(id).name),
+      highlights: view?.highlights.length
+        ? view.highlights.map((h) => h.text[lang])
+        : sel.highlights.map(
+            (id) =>
+              must(
+                p.highlights.find((h) => h.id === id),
+                `highlight ${id}`,
+              ).text[lang],
+          ),
+      technologies: (view?.technologies ?? p.technologies).map((id) => skill(id).name),
       context: p.context,
       ...(p.status && { status: p.status }),
       ...(p.caseStudy && { caseStudy: p.id }),
@@ -249,6 +264,7 @@ export function renderCV(
       labels: labels[lang],
       variant: variant.id,
       referencesNote: variant.referencesNote,
+      featuredProjects: featured,
     },
     basics: {
       name: person.name,
@@ -332,20 +348,37 @@ export function renderCV(
   return cvSchema.parse(cv);
 }
 
-/** Atajo: valida la variante y resuelve el CV de un idioma. */
+/** Destino del CV: la web o el PDF (que aplica los ajustes `variant.pdf`). */
+export type Target = 'web' | 'pdf';
+
+/** Variante efectiva para un destino: en el PDF, `pdf.projects` y `pdf.groups` sustituyen a los de la web. */
+export function variantFor(variant: Variant, target: Target): Variant {
+  const pdf = variant.pdf;
+  if (target !== 'pdf' || !pdf) return variant;
+  return {
+    ...variant,
+    projects: pdf.projects ?? variant.projects,
+    groups: pdf.groups ?? variant.groups,
+  };
+}
+
+/** Atajo: valida la variante y resuelve el CV de un idioma para un destino (web por defecto). */
 export function resolveCV(input: {
   profile: Profile;
   variant: Variant;
   labels: LabelsByLang;
   lang: Lang;
+  target?: Target;
 }): CV {
-  const errors = validateVariant(input.profile, input.variant);
+  const variant = variantFor(input.variant, input.target ?? 'web');
+  const errors = validateVariant(input.profile, variant);
   if (errors.length) throw new Error(errors.join('\n'));
   return renderCV(
     input.profile,
-    selectVariant(input.profile, input.variant),
-    input.variant,
+    selectVariant(input.profile, variant),
+    variant,
     input.labels,
     input.lang,
+    input.target,
   );
 }

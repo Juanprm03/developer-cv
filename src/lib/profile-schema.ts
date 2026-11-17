@@ -73,6 +73,19 @@ const projectSchema = z.strictObject({
   role: text.optional(),
   technologies: z.array(idSchema).min(1),
   highlights: z.array(highlightSchema).default([]),
+  /**
+   * Presentación en «Proyectos destacados» del CV en PDF (variantes con `pdf.featuredProjects`).
+   * Solo hechos respaldados por el caso de estudio; las tecnologías deben estar en las del
+   * proyecto o, si es profesional, en las de su empleo.
+   */
+  cv: z
+    .strictObject({
+      name: text.optional(),
+      description: rich.optional(),
+      technologies: z.array(idSchema).optional(),
+      highlights: z.array(highlightSchema).default([]),
+    })
+    .optional(),
   /** Cifras verificables del proyecto (máx. 4). Nunca estimaciones sin fuente. */
   metrics: z
     .array(z.strictObject({ value: text, label: text }))

@@ -1002,6 +1002,104 @@
               "additionalProperties": false
             }
           },
+          "cv": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "object",
+                "properties": {
+                  "es": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "es",
+                  "en"
+                ],
+                "additionalProperties": false
+              },
+              "description": {
+                "type": "object",
+                "properties": {
+                  "es": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "en": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "es",
+                  "en"
+                ],
+                "additionalProperties": false
+              },
+              "technologies": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+                }
+              },
+              "highlights": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+                    },
+                    "text": {
+                      "type": "object",
+                      "properties": {
+                        "es": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "en": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "es",
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "tags": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+                      }
+                    },
+                    "project": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "text",
+                    "tags"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          },
           "metrics": {
             "default": [],
             "maxItems": 4,

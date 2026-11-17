@@ -401,6 +401,29 @@ projects:
     caseStudy: true
     technologies: [nodejs, express, typescript, mysql, sequelize, redis, whatsapp-cloud-api, openai-api, langchain, jest]
     tags: [ai, node, backend, automation]
+    # «Proyectos destacados» del CV en PDF. Fuente: «Mi contribución» del caso de estudio.
+    cv:
+      name: { es: Plataforma de automatización conversacional, en: Conversational automation platform }
+      description:
+        es: Flujos guiados y agentes de IA para operaciones y conversaciones abiertas en WhatsApp.
+        en: Guided flows and AI agents for operations and open-ended conversations on WhatsApp.
+      technologies: [nodejs, express, whatsapp-cloud-api, openai-api, langchain]
+      highlights:
+        - id: conv-cv-flows
+          tags: [node, automation]
+          text:
+            es: Flujos de **registro, recargas y compra de pines** con validación de datos y sesiones por operación.
+            en: "**Registration, top-up and PIN purchase** flows with data validation and per-operation sessions."
+        - id: conv-cv-agents
+          tags: [ai, node]
+          text:
+            es: Integración de **OpenAI API** con agentes de **LangChain** y herramientas de la aplicación, incluido un asistente para crear y buscar propiedades.
+            en: "**OpenAI API** integration with **LangChain** agents and application tools, including an assistant to create and search properties."
+        - id: conv-cv-reports
+          tags: [node, quality]
+          text:
+            es: Reportes de ventas con permisos y pruebas de extremo a extremo de los flujos con **Jest**.
+            en: Permission-based sales reports and end-to-end tests of the flows with **Jest**.
 
   - id: payments-platform
     name: { es: Plataforma de pagos e integraciones financieras, en: Payments & financial integrations platform }
@@ -413,6 +436,29 @@ projects:
     caseStudy: true
     technologies: [nestjs, typescript, prisma, mysql, zod, jest]
     tags: [backend, node, payments, api]
+    # «Proyectos destacados» del CV en PDF. Fuente: «Mi contribución» del caso de estudio.
+    cv:
+      name: { es: Plataforma de pagos e integraciones, en: Payments & integrations platform }
+      description:
+        es: Servicio central de pagos con APIs REST que notifica el resultado a los productos de origen.
+        en: Central payments service with REST APIs that notifies results to the originating products.
+      technologies: [nestjs, typescript, rest-apis, webhooks]
+      highlights:
+        - id: pay-cv-payments
+          tags: [payments, api]
+          text:
+            es: Pagos con **tarjeta y enlaces de pago** con **claves de idempotencia** y consulta de estado.
+            en: "**Card and payment-link** payments with **idempotency keys** and status polling."
+        - id: pay-cv-providers
+          tags: [payments, backend]
+          text:
+            es: Adaptadores de proveedores y servicio de **cifrado RSA** para los datos que exige cada proveedor.
+            en: Provider adapters and an **RSA encryption** service for provider-required data.
+        - id: pay-cv-webhooks
+          tags: [api, backend]
+          text:
+            es: "**Webhooks** de resultado, notificaciones por correo y WhatsApp, y consulta y pago de facturas."
+            en: Result **webhooks**, email and WhatsApp notifications, and bill lookup and payment.
 
   - id: ticketing-ecosystem
     name: { es: Ecosistema de ticketing y gestión operativa, en: Ticketing & operations management ecosystem }
@@ -497,6 +543,24 @@ projects:
         text:
           es: Emisión de facturas con transaction.atomic y select_for_update para bloquear la factura y su secuencia de numeración por empresa.
           en: Invoice issuing with transaction.atomic and select_for_update to lock the invoice and its per-company numbering sequence.
+    # «Proyectos destacados» del CV en PDF. Fuente: caso de estudio (solución, retos y resultados).
+    cv:
+      name: { es: Nexo ERP, en: Nexo ERP }
+      description:
+        es: "ERP multiempresa: monolito modular en **Django** con vistas web y API REST sobre servicios comunes."
+        en: "Multi-company ERP: modular **Django** monolith with web views and a REST API over shared services."
+      technologies: [python, django, postgresql, docker]
+      highlights:
+        - id: erp-cv-invoicing
+          tags: [python, data]
+          text:
+            es: Emisión de facturas con **transaction.atomic y select_for_update** para bloquear la factura y su secuencia de numeración por empresa.
+            en: Invoice issuing with **transaction.atomic and select_for_update** to lock the invoice and its per-company numbering sequence.
+        - id: erp-cv-tests
+          tags: [python, quality]
+          text:
+            es: Pruebas de modelos, servicios, API, permisos, aislamiento de datos por empresa y concurrencia.
+            en: Tests for models, services, API, permissions, per-company data isolation and concurrency.
 
   - id: developer-cv
     name: { es: developer-cv — Portafolio y CV como código, en: developer-cv — Portfolio & CV as Code }

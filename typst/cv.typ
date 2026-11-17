@@ -117,15 +117,18 @@
 = #labels.work
 #for job in cv.work [
   #block(breakable: true, below: 1.35em)[
-    #grid(
-      columns: (1fr, auto),
-      column-gutter: 1em,
-      text(size: 10.5pt, weight: "bold", fill: ink, job.position),
-      text(size: 8.8pt, fill: muted, fmt-range(job.startDate, job.at("endDate", default: none))),
-    )
-    #v(-0.35em)
-    #text(weight: "medium", fill: accent)[
-      #if "url" in job { link(job.url, job.name) } else { job.name }#if "location" in job [ · #job.location]
+    // sticky: el cargo y la empresa nunca quedan solos al final de una página.
+    #block(sticky: true, breakable: false)[
+      #grid(
+        columns: (1fr, auto),
+        column-gutter: 1em,
+        text(size: 10.5pt, weight: "bold", fill: ink, job.position),
+        text(size: 8.8pt, fill: muted, fmt-range(job.startDate, job.at("endDate", default: none))),
+      )
+      #v(-0.35em)
+      #text(weight: "medium", fill: accent)[
+        #if "url" in job { link(job.url, job.name) } else { job.name }#if "location" in job [ · #job.location]
+      ]
     ]
     #if "summary" in job { block(above: 0.55em, text(fill: muted, rich(job.summary))) }
     #if job.at("highlights", default: ()).len() > 0 { list(..job.highlights.map(rich)) }
@@ -144,15 +147,18 @@
 ]
 
 // ── 5. Proyectos seleccionados ────────────────────────────────────────────
+#let featured = cv.meta.at("featuredProjects", default: false)
 #if cv.at("projects", default: ()).len() > 0 [
-  = #labels.projects
+  = #if featured { labels.featuredProjects } else { labels.projects }
   #for p in cv.projects [
     #block(below: 1em, breakable: false)[
       #text(weight: "bold", fill: ink, p.name)
       #{
         let tags = ()
         let named = lower(p.name).contains(lower(labels.personalProject))
-        if p.at("context", default: "professional") == "personal" and not named { tags.push(labels.personalProject) }
+        let ctx = p.at("context", default: "professional")
+        if ctx == "personal" and not named { tags.push(labels.personalProject) }
+        if ctx == "professional" and featured { tags.push(labels.professionalProject) }
         if p.at("status", default: none) == "development" { tags.push(labels.inDevelopment) }
         if p.at("status", default: none) == "stopped" { tags.push(labels.devStopped) }
         if tags.len() > 0 { text(size: 8.6pt, fill: muted)[ · #tags.join(" · ")] }

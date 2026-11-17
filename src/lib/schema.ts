@@ -39,6 +39,7 @@ export const cvSchema = z.strictObject({
       competencies: z.string(),
       work: z.string(),
       projects: z.string(),
+      featuredProjects: z.string(),
       skills: z.string(),
       education: z.string(),
       certificates: z.string(),
@@ -59,6 +60,7 @@ export const cvSchema = z.strictObject({
       references: z.string(),
       referencesNote: z.string(),
       personalProject: z.string(),
+      professionalProject: z.string(),
       inDevelopment: z.string(),
       devStopped: z.string(),
       months: z.array(z.string()).length(12),
@@ -67,6 +69,8 @@ export const cvSchema = z.strictObject({
     variant: z.string().optional(),
     /** Mostrar la nota de referencias disponibles a solicitud. */
     referencesNote: z.boolean().default(false),
+    /** CV en PDF con la sección «Proyectos destacados» (ver variant.pdf). */
+    featuredProjects: z.boolean().default(false),
   }),
 
   basics: z.strictObject({

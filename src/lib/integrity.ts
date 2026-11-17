@@ -109,6 +109,9 @@ export function factCorpus(profile: Profile): string {
     add(p.name);
     add(p.description);
     for (const h of p.highlights) add(h.text);
+    if (p.cv?.name) add(p.cv.name);
+    if (p.cv?.description) add(p.cv.description);
+    for (const h of p.cv?.highlights ?? []) add(h.text);
   }
   return parts.join('\n');
 }
