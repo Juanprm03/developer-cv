@@ -87,14 +87,14 @@
 ]
 #{
   set text(size: 8.7pt, fill: muted)
-  let loc = b.location.city + ", " + b.location.country
-  let items = (loc,)
-  if "phone" in b { items.push(link("tel:" + b.phone.replace(" ", ""), b.phone)) }
-  items.push(link("mailto:" + b.email, b.email))
-  for p in b.profiles { items.push(link(p.url, pretty-url(p.url))) }
-  if "url" in b { items.push(link(b.url, pretty-url(b.url))) }
+  // Dos líneas: datos personales (ubicación, teléfono, correo) y enlaces (perfiles, portafolio).
+  let personal = (b.location.city + ", " + b.location.country,)
+  if "phone" in b { personal.push(link("tel:" + b.phone.replace(" ", ""), b.phone)) }
+  personal.push(link("mailto:" + b.email, b.email))
+  let links = b.profiles.map(p => link(p.url, pretty-url(p.url)))
+  if "url" in b { links.push(link(b.url, pretty-url(b.url))) }
   // box(): cada dato de contacto se mantiene en una sola línea.
-  items.map(box).join(dot)
+  par(leading: 0.62em)[#personal.map(box).join(dot) \ #links.map(box).join(dot)]
 }
 
 // ── 2. Perfil ─────────────────────────────────────────────────────────────

@@ -48,16 +48,6 @@ const heading =
               <Icon name="pin" class="size-4 shrink-0" />
               {basics.location.city}, {basics.location.country}
             </li>
-            {
-              basics.phone && (
-                <li>
-                  <a href={`tel:${basics.phone.replaceAll(' ', '')}`} class="flex items-center gap-1.5 hover:text-ink">
-                    <Icon name="phone" class="size-4 shrink-0" />
-                    {basics.phone}
-                  </a>
-                </li>
-              )
-            }
             <li>
               <a href={`mailto:${basics.email}`} class="flex items-center gap-1.5 hover:text-ink">
                 <Icon name="mail" class="size-4 shrink-0" />

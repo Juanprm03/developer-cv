@@ -61,6 +61,7 @@ function expectedTexts(cv: CV): string[] {
   return [
     cv.basics.name,
     cv.basics.email,
+    ...(cv.basics.phone ? [cv.basics.phone] : []),
     L.summary,
     L.work,
     L.skills,
@@ -80,6 +81,7 @@ function expectedTexts(cv: CV): string[] {
 function expectedLinks(cv: CV): string[] {
   return [
     `mailto:${cv.basics.email}`,
+    ...(cv.basics.phone ? [`tel:${cv.basics.phone.replaceAll(' ', '')}`] : []),
     ...cv.basics.profiles.map((p) => p.url),
     ...(cv.basics.url ? [cv.basics.url] : []),
     ...cv.projects.flatMap((p) => (p.url ? [p.url] : [])),

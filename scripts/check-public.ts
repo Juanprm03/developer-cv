@@ -84,6 +84,21 @@ if (refTerms.length) {
   }
 }
 
+// Teléfono del propietario: solo en el encabezado de los PDF del CV, no en la web.
+const phone = loadProfile().person.phone;
+if (phone) {
+  const forms = [
+    phone,
+    phone.replaceAll(' ', ''),
+    phone.replace(/^\+\d+\s*/, '').replaceAll(' ', ''),
+  ];
+  for (const f of all.filter((x) => !x.endsWith('.pdf'))) {
+    const s = readFileSync(f).toString(f.endsWith('.png') ? 'latin1' : 'utf8');
+    if (forms.some((x) => s.includes(x)))
+      errors.push(`${f} contiene el teléfono (solo va en el PDF)`);
+  }
+}
+
 for (const l of LANGS) {
   // La imagen Open Graph se genera desde este JSON: si está limpio, la imagen también.
   const og = `.cache/cv/${loadVariants().find((v) => v.public)?.id}.${l}.json`;

@@ -52,16 +52,6 @@ const icon = (network: string): IconName => {
           </li>
         ))
       }
-      {
-        b.phone && (
-          <li>
-            <a href={`tel:${b.phone.replaceAll(' ', '')}`} class="btn btn-secondary !py-2">
-              <Icon name="phone" class="size-4" />
-              {b.phone}
-            </a>
-          </li>
-        )
-      }
     </ul>
   </div>
 </section>

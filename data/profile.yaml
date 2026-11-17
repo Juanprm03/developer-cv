@@ -21,7 +21,8 @@ updated: 2026-11
 person:
   name: Juan Pablo Ruiz Marín
   email: juanpabloruizmarin333@gmail.com
-  # phone: no se publica sin aprobación del propietario.
+  # Aprobado por el propietario para el encabezado del CV en PDF (no se muestra en la web).
+  phone: "+57 319 547 0221"
   site: https://juanprm03.github.io/developer-cv/
   location:
     city: Medellín
